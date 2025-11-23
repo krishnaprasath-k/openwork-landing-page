@@ -665,13 +665,15 @@
   }
 
   .navbar-icon-2 {
-    right: 15%;
+    right: 35%;
     top: 30%;
+    transform: none;
   }
 
   .navbar-icon-3 {
     left: 15%;
     top: 30%;
+    transform: none;
   }
 }
 
@@ -693,6 +695,7 @@
     transform: translate(-50%, -40%);
     object-fit: cover;
     object-position: center top;
+    content: url('/assets/Ellipse 57.png');
   }
 
   .floating-icons {
@@ -802,12 +805,12 @@
   }
 
   .navbar-icon-2 {
-    right: 18%;
-    top: -20%;
+    right: -5%;
+    top: -13%;
   }
 
   .navbar-icon-3 {
-    left: 18%;
-    top: -20%;
+    left: -5%;
+    top: -13%;
   }
 }

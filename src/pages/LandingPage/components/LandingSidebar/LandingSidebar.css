@@ -200,23 +200,44 @@
 
 @media (max-width: 768px) {
   .landing-sidebar {
-    left: 0;
-    right: 0;
-    top: auto;
-    bottom: 0;
-    transform: none;
-    width: 100%;
-    height: 64px;
+    position: fixed;
+    left: 50%;
+    top: 90px;
+    bottom: auto;
+    transform: translateX(-50%);
+    width: 390px;
+    max-width: calc(100vw - 40px);
+    height: 32px;
     flex-direction: row;
+    align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 0 20px;
+    padding: 0;
+  }
+
+  /* Horizontal line background */
+  .landing-sidebar::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0) 0%, 
+      #f2f2f2 50%, 
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 0;
   }
 
   /* Hide vertical line on mobile */
   .sidebar-line {
+    display: none;
+  }
+
+  /* Hide top icon on mobile */
+  .sidebar-top-icon {
     display: none;
   }
 
@@ -225,52 +246,111 @@
     position: relative;
     left: auto;
     top: auto;
-    width: auto;
-    height: 100%;
+    width: 100%;
+    height: 32px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 0;
+    padding: 0;
   }
 
-  /* Mobile nav items - horizontal layout */
+  /* Mobile nav items - horizontal layout with specific positions */
   .sidebar-nav-item {
     position: relative !important;
     top: auto !important;
     left: auto !important;
     transform: none !important;
+    width: 32px;
+    height: 32px;
+    padding: 12px;
+    background: linear-gradient(180deg, #f4f4f4 0%, #fefefe 100%);
+    border: 0px solid white;
+    box-shadow: none;
+    z-index: 1;
   }
 
-  /* Hide non-active items on mobile to avoid clutter */
-  .sidebar-nav-item:not(.active) {
-    display: none;
+  /* First icon (Set Profile) has shadow */
+  .sidebar-nav-item:nth-child(1) {
+    box-shadow: 0px 0px 0.408px 1.223px rgba(0, 0, 0, 0.05), 
+                0px 4.89px 5.298px -2.445px rgba(0, 0, 0, 0.1);
   }
 
-  /* Show active and 2 items on each side */
-  .sidebar-nav-item.active,
-  .sidebar-nav-item.near-active {
+  /* Active state for mobile */
+  .sidebar-nav-item.active {
+    background: linear-gradient(180deg, #f4f4f4 0%, #fefefe 100%);
+    border: 1px solid rgba(18, 70, 255, 0.2);
+  }
+
+  .sidebar-nav-item.active img {
+    filter: 
+      brightness(0) 
+      saturate(100%) 
+      invert(33%) 
+      sepia(94%) 
+      saturate(3000%) 
+      hue-rotate(215deg) 
+      brightness(102%) 
+      contrast(102%);
+  }
+
+  /* Disable hover expansion on mobile */
+  .sidebar-nav-item:hover {
+    width: 32px;
+    min-width: 32px;
+    padding: 12px;
+    border-radius: 999px;
+    border: 0px solid white;
+    background: linear-gradient(180deg, #f4f4f4 0%, #fefefe 100%);
+  }
+
+  .sidebar-nav-item:hover .nav-label {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  /* Spacing between nav items - specific positions like Figma */
+  .sidebar-nav-item:nth-child(1) {
+    margin-right: 105px;
+  }
+
+  .sidebar-nav-item:nth-child(2) {
+    margin-right: 105px;
+  }
+
+  /* Manual adjustment for inner icons */
+  .sidebar-nav-item .icon-wrapper {
+    width: 16px;
+    height: 16px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* Adjust icon position manually */
+    top: 0px;
+    left: -5px;
+  }
+
+  .sidebar-nav-item img {
+    width: 16px;
+    height: 16px;
+    display: block;
   }
 }
 
 @media (max-width: 480px) {
   .landing-sidebar {
-    padding: 0 12px;
+    width: 100%;
+    max-width: calc(100vw - 32px);
+    top: 80px;
   }
 
-  .sidebar-nav {
-    gap: 8px;
+  .sidebar-nav-item:nth-child(1) {
+    margin-right: 80px;
   }
 
-  .sidebar-nav-item {
-    width: 28px;
-    height: 28px;
-  }
-
-  .sidebar-nav-item img {
-    width: 9px;
-    height: 9px;
+  .sidebar-nav-item:nth-child(2) {
+    margin-right: 80px;
   }
 }
-

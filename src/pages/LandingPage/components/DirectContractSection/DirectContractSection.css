@@ -247,10 +247,12 @@
   .lp-5-heading {
     font-size: 28px;
     line-height: 36px;
+   
   }
 
   .lp-5-description {
     font-size: 13px;
     line-height: 20px;
+    max-width: 400px;
   }
 }
