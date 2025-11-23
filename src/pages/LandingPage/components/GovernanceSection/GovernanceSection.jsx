@@ -18,7 +18,7 @@ const GovernanceSection = () => {
             onClick={() => navigate('/documentation')}
           >
             View Documentation
-            <img src="/public/assets/lp7-arrow-icon.svg" alt="" className="lp-button-icon" />
+            <img src="/assets/lp7-arrow-icon.svg" alt="" className="lp-button-icon" />
           </button>
         </div>
 
@@ -32,12 +32,12 @@ const GovernanceSection = () => {
 
             {/* Core Circle */}
             <div className="lp-9-core-circle">
-              <img src="/public/assets/lp7-core-circle.svg" alt="" className="lp-9-core-bg" />
+              <img src="/assets/lp7-core-circle.svg" alt="" className="lp-9-core-bg" />
             </div>
 
             {/* Center Governance Icon */}
             <div className="lp-9-center-icon">
-              <img src="/public/assets/lp9-governance-icon.svg" alt="Governance" className="lp-9-governance-img" />
+              <img src="/assets/lp9-governance-icon.svg" alt="Governance" className="lp-9-governance-img" />
             </div>
           </div>
         </div>
