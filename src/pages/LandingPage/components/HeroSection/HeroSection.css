@@ -684,9 +684,11 @@
   }
 
   .radiant-glow-container {
-    width: 590px;
-    height: 560px;
-    transform: translate(-50%, -40%);
+    width: 800px;
+    height: 800px;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .main-circle-bg {
