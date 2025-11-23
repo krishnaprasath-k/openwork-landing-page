@@ -11,6 +11,18 @@
   position: relative;
 }
 
+/* Glow Wrapper - Masked container */
+.glow-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* Circle Group - Background elements */
 .circle-group {
   position: absolute;
@@ -686,7 +698,7 @@
   .radiant-glow-container {
     width: 800px;
     height: 800px;
-    top: 80%;
+    top: 125%;
     left: 50%;
     transform: translateX(-50%);
   }

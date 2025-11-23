@@ -61,11 +61,14 @@ const HeroSection = () => {
   return (
     <section className="lp-section lp-1-section">
       <main className="landing-main">
-        {/* Background Circle Group */}
-        <div className="circle-group">
+        {/* Glow Wrapper with Mask */}
+        <div className="glow-wrapper">
           {/* Radiant Glow Background */}
           <div className="radiant-glow-container"></div>
-          
+        </div>
+
+        {/* Background Circle Group */}
+        <div className="circle-group">
           {/* Main Circle */}
           <img 
             src="/assets/f0a5bddf438bec766e653cd0886722bed6ea4ee3.svg" 
