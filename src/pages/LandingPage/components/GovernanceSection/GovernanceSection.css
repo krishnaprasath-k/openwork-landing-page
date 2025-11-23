@@ -59,7 +59,7 @@
 
 .lp-9-governance-circle-group {
   position: absolute;
-  width: 390.047px;
+  width: 410.047px;
   height: 360px;
   left: 50%;
   top: 50%;
@@ -69,11 +69,11 @@
 /* Outer Governance Circle Image */
 .lp-9-outer-circle-image {
   position: absolute;
-  width: 380px;
-  height: 380px;
+  width: 450px;
+  height: 450px;
   object-fit: contain;
-  left: -15px;
-  top: -10.2px;
+  left: -50px;
+  top: -42.2px;
 }
 
 @keyframes rotate-lp9-outer {
@@ -158,7 +158,7 @@
 /* Center Governance Icon */
 .lp-9-center-icon {
   position: absolute;
-  left: 45%;
+  left: 42%;
   top: 50%;
   transform: translate(calc(-50% - 2.343px), calc(-50% + 9.885px));
   width: 87.474px;
