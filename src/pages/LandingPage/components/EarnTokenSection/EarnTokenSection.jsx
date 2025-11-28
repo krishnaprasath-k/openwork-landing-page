@@ -6,7 +6,7 @@ const EarnTokenSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-8-section" className="lp-section lp-8-section">
+    <section id="lp-10-section" className="lp-section lp-10-section">
       <div className="lp-8-container">
         <div className="lp-8-content">
           <h1 className="lp-8-heading">Earn OWORK tokens by doing jobs on OpenWork</h1>

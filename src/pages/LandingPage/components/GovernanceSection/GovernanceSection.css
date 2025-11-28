@@ -1,380 +1,365 @@
-/* LP-9 Governance Section Styles */
+/* Governance/DAO Section Styles */
 
-.lp-9-section {
+.lp-7-governance-section {
   width: 100%;
-  min-height: 734px;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 64px 0;
+  background: #FFFFFF;
+  padding: 80px 0;
 }
 
-.lp-9-container {
+.governance-container {
   max-width: 1280px;
   width: 100%;
   padding: 0 162px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 90px;
 }
 
 /* Left Content */
-.lp-9-content {
-  width: 432px;
+.governance-content {
+  flex: 1;
+  max-width: 432px;
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 12px;
 }
 
-.lp-9-heading {
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
-  font-size: 40px;
-  line-height: 48px;
-  letter-spacing: -1.6px;
-  color: #050505;
-  margin: 0;
+.governance-tag {
+  display: inline-flex;
+  padding: 8px 12px;
+  border: 1px solid #D0D0D0;
+  border-radius: 48px;
+  width: fit-content;
 }
 
-.lp-9-description {
+.governance-tag span {
   font-family: 'Satoshi', sans-serif;
+  font-size: 12px;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
   color: #767676;
+}
+
+.governance-heading {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -1.6px;
+  line-height: 48px;
+  color: #050505;
   margin: 0;
   margin-top: 12px;
 }
 
-/* Right Content - Governance Circle */
-.lp-9-circle-container {
-  width: 500px;
-  height: 450px;
-  position: relative;
+.governance-description {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #767676;
+  margin: 0;
+}
+
+.governance-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #1246FF 23.96%, #4770FF 134.37%);
+  border: 4px solid #1246FF;
+  border-radius: 12px;
+  box-shadow: 0px 4.634px 5.02px rgba(0, 0, 0, 0.20), 0px 0px 0.386px 1.158px rgba(0, 0, 0, 0.05);
+  font-family: 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: fit-content;
+  margin-top: 36px;
+}
+
+.governance-button:hover {
+  transform: translateY(-2px);
+}
+
+.governance-button-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+/* Right DAO Card */
+.dao-card {
+  width: 367px;
   flex-shrink: 0;
+  background: #FFFFFF;
+  border: 1.412px solid #FFFFFF;
+  border-radius: 17px;
+  box-shadow: 0px 0px 40px rgba(94, 94, 94, 0.12);
   overflow: hidden;
 }
 
-.lp-9-governance-circle-group {
-  position: absolute;
-  width: 346.047px;
-  height: 360px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-30%, -50%);
+.dao-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 22px;
+  background: #FFFFFF;
+  border-bottom: 1.412px solid #FFFFFF;
 }
 
-/* Ellipse Background */
-.lp-9-ellipse-bg {
-  position: absolute;
-  left: 0;
-  top: 19.2px;
-  width: 340.798px;
-  height: 340.798px;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Ellipse Background */
-.lp-9-ellipse-bg {
-  position: absolute;
-  left: 0;
-  top: 19.2px;
-  width: 340.798px;
-  height: 340.798px;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Radiant Glow */
-.lp-9-radiant-glow {
-  position: absolute;
-  left: 61.67px;
-  top: 80.99px;
-  width: 280px;
-  height: 280px;
-  animation: lp9-rotate-glow 20s linear infinite;
-  z-index: 1;
-}
-
-@keyframes lp9-rotate-glow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.lp-9-glow-layer-1,
-.lp-9-glow-layer-2 {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-/* Core Circle */
-.lp-9-core-circle {
-  position: absolute;
-  left: 61.87px;
-  top: 81.07px;
-  width: 217.618px;
-  height: 217.618px;
-  z-index: 2;
-}
-
-.lp-9-core-circle::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 280px;
-  height: 280px;
-  background: url('/assets/RadiantGlow.png') center/contain no-repeat;
-  animation: lp9-rotate-glow 20s linear infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes lp9-rotate-glow {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-.lp-9-core-bg {
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-/* Community Avatars */
-.lp-9-avatar {
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%);
-  z-index: 3;
-  overflow: hidden;
+.dao-back-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%);
+  border: 2.825px solid #FFFFFF;
+  border-radius: 8.5px;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dao-back-icon {
+  width: 14px;
+  height: 14px;
+  transform: rotate(90deg);
+  opacity: 0.6;
+}
+
+.dao-card-title {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4D4D4D;
+  margin: 0;
+  letter-spacing: 0.28px;
+}
+
+.dao-card-body {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dao-icon-wrapper {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 70, 255, 0.06);
+  border-radius: 51px;
+  padding: 11px;
   box-sizing: border-box;
 }
 
-.lp-9-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+.dao-icon {
+  width: 23px;
+  height: 23px;
 }
 
-/* Avatar Positions */
-.lp-9-avatar-top {
-  left: 143.2px;
-  top: -7.22px;
-  width: 60px;
-  height: 60px;
-  border: 5.523px solid white;
-  padding: 5.83px;
+.dao-card-description {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  color: #868686;
+  margin: 0;
 }
 
-.lp-9-avatar-top .lp-9-avatar-img {
-  width: 48px;
-  height: 48px;
+.dao-paper-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: #1246FF;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
-.lp-9-avatar-left {
-  left: -18.07px;
-  top: 116.35px;
-  width: 48px;
-  height: 48px;
-  border: 4.174px solid white;
-  padding: 4.07px;
+.dao-paper-link:hover {
+  opacity: 0.8;
 }
 
-.lp-9-avatar-left .lp-9-avatar-img {
-  width: 40px;
-  height: 40px;
+.dao-link-icon {
+  width: 11px;
+  height: 11px;
 }
 
-.lp-9-avatar-bottom-left {
-  left: 34.72px;
-  top: 296.07px;
-  width: 48px;
-  height: 48px;
-  border: 4.174px solid white;
-  padding: 4.47px;
+.dao-staking-info {
+  background: #FAFAFA;
+  border: 1.412px solid #FFFFFF;
+  border-radius: 8.5px;
+  padding: 11px;
 }
 
-.lp-9-avatar-bottom-left .lp-9-avatar-img {
-  width: 39.065px;
-  height: 39.065px;
+.dao-staking-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.lp-9-avatar-bottom-right {
-  left: 249.29px;
-  top: 297.99px;
-  width: 60px;
-  height: 60px;
-  border: 5.523px solid white;
-  padding: 5.91px;
+.dao-staking-label {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: #767676;
 }
 
-.lp-9-avatar-bottom-right .lp-9-avatar-img {
-  width: 48.188px;
-  height: 48.188px;
+.dao-staking-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.lp-9-avatar-right {
-  left: 305.74px;
-  top: 110.53px;
-  width: 60px;
-  height: 60px;
-  border: 5.41px solid white;
-  padding: 5.58px;
+.dao-staking-value span {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.28px;
+  color: #4D4D4D;
 }
 
-.lp-9-avatar-right .lp-9-avatar-img {
-  width: 48.842px;
-  height: 48.842px;
-}
-
-/* Center Governance Icon */
-.lp-9-center-icon {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(calc(-50% - 2.343px), calc(-50% + 9.885px));
-  width: 87.474px;
-  height: 87.474px;
-  z-index: 6;
+.dao-token-icon {
+  width: 11px;
+  height: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  background: linear-gradient(180deg, #1246FF 23.96%, #4770FF 134.37%);
+  border: 1px solid #1246FF;
+  border-radius: 10px;
 }
 
-.lp-9-governance-img {
+.dao-token-icon img {
+  width: 6px;
+  height: 6px;
+}
+
+.dao-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 11px;
+  border: 1.412px solid #FFFFFF;
+  border-radius: 8.5px;
+  background: #FFFFFF;
+}
+
+.dao-amount-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: #050505;
+  outline: none;
+}
+
+.dao-join-button {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, #1246FF 23.96%, #4770FF 134.37%);
+  border: 2.825px solid #1246FF;
+  border-radius: 8.5px;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-/* Responsive Design */
+.dao-join-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive */
 @media (max-width: 1440px) {
-  .lp-9-container {
-    padding: 0 120px;
-    gap: 70px;
+  .governance-container {
+    padding: 0 80px;
+    gap: 60px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .governance-container {
+    gap: 60px;
+    padding: 0 40px;
   }
 
-  .lp-9-content {
-    width: 400px;
-  }
-
-  .lp-9-heading {
-    font-size: 36px;
-    line-height: 44px;
-  }
-
-  .lp-9-circle-container {
-    width: 460px;
-    height: 420px;
+  .dao-card {
+    width: 320px;
   }
 }
 
 @media (max-width: 1024px) {
-  .lp-9-container {
-    padding: 0 80px;
-    gap: 50px;
+  .governance-container {
     flex-direction: column;
-  }
-
-  .lp-9-content {
-    width: 100%;
-    max-width: 500px;
     align-items: center;
+    gap: 40px;
+    padding: 0 40px;
+  }
+
+  .governance-content {
+    max-width: 100%;
     text-align: center;
+    align-items: center;
   }
 
-  .lp-9-heading {
-    font-size: 32px;
-    line-height: 40px;
-  }
-
-  .lp-9-description {
-    font-size: 15px;
-    line-height: 23px;
-  }
-
-  .lp-9-circle-container {
+  .dao-card {
     width: 100%;
-    max-width: 460px;
-    height: 420px;
+    max-width: 400px;
   }
 }
 
 @media (max-width: 768px) {
-  .lp-9-section {
+  .lp-7-governance-section {
     padding: 60px 0;
   }
 
-  .lp-9-container {
-    padding: 0 40px;
-    gap: 40px;
+  .governance-container {
+    padding: 0 20px;
   }
 
-  .lp-9-heading {
-    font-size: 28px;
-    line-height: 36px;
+  .governance-heading {
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -1.2px;
   }
 
-  .lp-9-description {
+  .governance-description {
     font-size: 14px;
     line-height: 21px;
-  }
-
-  .lp-9-circle-container {
-    width: 100%;
-    max-width: 380px;
-    height: 350px;
-  }
-
-  .lp-9-governance-circle-group {
-    transform: translate(-50%, -50%) scale(0.9);
   }
 }
 
 @media (max-width: 480px) {
-  .lp-9-container {
-    padding: 0 20px;
-    gap: 30px;
+  .governance-heading {
+    font-size: 28px;
+    line-height: 36px;
   }
 
-  .lp-9-heading {
-    font-size: 24px;
-    line-height: 32px;
-  }
-
-  .lp-9-description {
+  .governance-description {
     font-size: 13px;
     line-height: 20px;
   }
 
-  .lp-9-circle-container {
-    width: 100%;
-    max-width: 320px;
-    height: 300px;
-  }
-
-  .lp-9-governance-circle-group {
-    transform: translate(-50%, -50%) scale(0.75);
+  .dao-card {
+    max-width: 100%;
   }
 }

@@ -6,63 +6,74 @@ const GovernanceSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-9-section" className="lp-section lp-9-section">
-      <div className="lp-9-container">
-        <div className="lp-9-content">
-          <h1 className="lp-9-heading">Governed by its community of OWORK Token holders</h1>
-          <p className="lp-9-description">
-            OpenWork is governed by its community. Propose upgrades, manage funds, and vote on key decisions with real stake in the system.
+    <section id="lp-7-section" className="lp-section lp-7-governance-section">
+      <div className="governance-container">
+        <div className="governance-content">
+          <div className="governance-tag">
+            <span>For governance</span>
+          </div>
+          <h1 className="governance-heading">Decentralized Autonomous Organization</h1>
+          <p className="governance-description">
+            As a governance, you can explore Decentralized Autonomous Organization (DAO) and skill oracles on Open Work seamlessly.
           </p>
           <button 
-            className="lp-blue-button"
-            onClick={() => navigate('/documentation')}
+            className="governance-button"
+            onClick={() => navigate('/whitepaper')}
           >
-            View Documentation
-            <img src="/public/assets/lp7-arrow-icon.svg" alt="" className="lp-button-icon" />
+            Read Whitepaper
+            <img src="/assets/arrow-up-right.svg" alt="" className="governance-button-icon" />
           </button>
         </div>
 
-        <div className="lp-9-circle-container">
-          <div className="lp-9-governance-circle-group">
-            {/* Ellipse Background and Avatars Container (rotates together) */}
-            <div className="lp-9-outer-ring-container">
-              {/* Ellipse Background */}
-              <img src="/public/assets/lp9-ellipse-bg.svg" alt="" className="lp-9-ellipse-bg" />
-
-              {/* Community Avatars */}
-              <div className="lp-9-avatar lp-9-avatar-top">
-                <img src="/public/assets/lp7-oracle-1.png" alt="Member" className="lp-9-avatar-img" />
-              </div>
-
-              <div className="lp-9-avatar lp-9-avatar-left">
-                <img src="/public/assets/lp7-oracle-2.png" alt="Member" className="lp-9-avatar-img" />
-              </div>
-
-              <div className="lp-9-avatar lp-9-avatar-bottom-left">
-                <img src="/public/assets/lp7-oracle-3.png" alt="Member" className="lp-9-avatar-img" />
-              </div>
-
-              <div className="lp-9-avatar lp-9-avatar-bottom-right">
-                <img src="/public/assets/lp7-oracle-4.png" alt="Member" className="lp-9-avatar-img" />
-              </div>
-
-              <div className="lp-9-avatar lp-9-avatar-right">
-                <img src="/public/assets/lp7-oracle-5.png" alt="Member" className="lp-9-avatar-img" />
+        <div className="dao-card">
+          <div className="dao-card-header">
+            <button className="dao-back-btn">
+              <img src="/assets/chevron-down.svg" alt="Back" className="dao-back-icon" />
+            </button>
+            <h3 className="dao-card-title">Join the DAO</h3>
+          </div>
+          
+          <div className="dao-card-body">
+            <div className="dao-icon-wrapper">
+              <img src="/assets/lp9-governance-icon.svg" alt="DAO" className="dao-icon" />
+            </div>
+            
+            <p className="dao-card-description">
+              OpenWork token holders govern the OpenWork DAO, which in turn governs the smart contracts, treasury and Athena's Skill Oracles. Read the OpenWork Paper to understand how it all works
+            </p>
+            
+            <a href="/whitepaper" className="dao-paper-link">
+              Read the OpenWork Paper
+              <img src="/assets/arrow-up-right-blue.svg" alt="" className="dao-link-icon" />
+            </a>
+            
+            <div className="dao-staking-info">
+              <div className="dao-staking-row">
+                <span className="dao-staking-label">MINIMUM STAKING AMOUNT</span>
+                <div className="dao-staking-value">
+                  <span>1,000,000</span>
+                  <div className="dao-token-icon">
+                    <img src="/assets/openwork-token.svg" alt="OWORK" />
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Radiant Glow */}
-            <div className="lp-9-radiant-glow"></div>
-
-            {/* Core Circle */}
-            <div className="lp-9-core-circle">
-              <img src="/public/assets/lp7-core-circle.svg" alt="" className="lp-9-core-bg" />
+            
+            <div className="dao-input-row">
+              <input 
+                type="text" 
+                className="dao-amount-input" 
+                placeholder="48.81"
+                defaultValue="48.81"
+              />
+              <div className="dao-token-icon">
+                <img src="/assets/openwork-token.svg" alt="OWORK" />
+              </div>
             </div>
-
-            {/* Center Governance Icon */}
-            <div className="lp-9-center-icon">
-              <img src="/public/assets/lp9-governance-icon.svg" alt="Governance" className="lp-9-governance-img" />
-            </div>
+            
+            <button className="dao-join-button">
+              Join DAO
+            </button>
           </div>
         </div>
       </div>

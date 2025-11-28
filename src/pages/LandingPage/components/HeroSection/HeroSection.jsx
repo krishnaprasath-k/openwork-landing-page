@@ -1,18 +1,12 @@
 import React from 'react';
-import Button from '../../../../components/Button/Button';
+import { useNavigate } from 'react-router-dom';
 import './HeroSection.css';
 
 const HeroSection = () => {
-  const handleLearnMore = () => {
-    document.getElementById('lp-2-section').scrollIntoView({ 
-      behavior: 'smooth' 
-    });
-  };
+  const navigate = useNavigate();
 
-  const handleDiscoverable = () => {
-    document.getElementById('lp-2-section').scrollIntoView({ 
-      behavior: 'smooth' 
-    });
+  const handleReadWhitepaper = () => {
+    navigate('/whitepaper');
   };
 
   const handleDirectContract = () => {
@@ -21,8 +15,8 @@ const HeroSection = () => {
     });
   };
 
-  const handleJobProgress = () => {
-    document.getElementById('lp-6-section').scrollIntoView({ 
+  const handleDAO = () => {
+    document.getElementById('lp-7-section').scrollIntoView({ 
       behavior: 'smooth' 
     });
   };
@@ -33,126 +27,87 @@ const HeroSection = () => {
     });
   };
 
-  const handleRaiseDispute = () => {
-    document.getElementById('lp-7-section').scrollIntoView({ 
+  const handleBrowseJobs = () => {
+    document.getElementById('lp-6-section').scrollIntoView({ 
       behavior: 'smooth' 
     });
-  };
-
-  const handleDAO = () => {
-    const element = document.getElementById('lp-9-section');
-    if (element) {
-      const yOffset = -100; // Offset to bring it down a bit
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
-
-  const handleSetProfile = () => {
-    document.getElementById('lp-2-section').scrollIntoView({ 
-      behavior: 'smooth' 
-    });
-  };
-
-  const handleBotClick = () => {
-    window.open('https://chatgpt.com/g/g-6811cd644b1c8191b203796b06deaa4a-openwork-simplified', '_blank');
   };
 
   return (
     <section className="lp-section lp-1-section">
       <main className="landing-main">
-        {/* Background Circle Group */}
-        <div className="circle-group">
-          {/* Radiant Glow Background */}
-          <div className="radiant-glow-container"></div>
-          
-          {/* Main Circle */}
+        {/* Hero Design Container - contains circle + glow + icons */}
+        <div className="hero-design-container">
+          {/* Outer glow image */}
           <img 
-            src="/assets/f0a5bddf438bec766e653cd0886722bed6ea4ee3.svg" 
+            src="/assets/hero-glow.svg" 
             alt="" 
-            className="main-circle-bg"
+            className="hero-glow-image"
           />
-        </div>
-
-        {/* Floating Icon Buttons */}
-        <div className="floating-icons">
-          <Button 
-            icon="/assets/62526e6f62a12cd8f3ecb86db19a495650068ad0.svg"
-            buttonCss="icon-btn icon-discoverable"
-            label="Discoverable"
-            onClick={handleDiscoverable}
+          
+          {/* Circle with gradient stroke */}
+          <img 
+            src="/assets/hero-circle-outer.svg" 
+            alt="" 
+            className="hero-circle-image"
           />
-          <Button 
-            icon="/assets/48d7e8cd65b4036c787ad29a2bdce07c13f29021.svg"
-            buttonCss="icon-btn icon-direct-contract"
-            label="Direct Contract"
+          
+          {/* Icon Buttons - positioned relative to the 1280px container */}
+          {/* Direct Contract - Top Left */}
+          <button 
+            className="hero-icon-btn hero-icon-direct"
             onClick={handleDirectContract}
-          />
-          <Button 
-            icon="/assets/7fbdaad122c8922623aaea9b99c9cdd6cc503c6f.svg"
-            buttonCss="icon-btn icon-job-progress"
-            label="Job In Progress"
-            onClick={handleJobProgress}
-          />
-          <Button 
-            icon="/assets/5993be528342167da5598a847635eb201549dae4.svg"
-            buttonCss="icon-btn icon-post-job"
-            label="Post Job"
-            onClick={handlePostJob}
-          />
-          <Button 
-            icon="/assets/0db7d9f3333eba0f15f08e07625cd29728a834ec.svg"
-            buttonCss="icon-btn icon-raise-dispute"
-            label="Raise Dispute"
-            onClick={handleRaiseDispute}
-          />
-          <Button 
-            icon="/assets/141af504612ac4760b6ff60cc6346fee9cea46cc.svg"
-            buttonCss="icon-btn icon-dao"
-            label="DAO"
-            onClick={handleDAO}
-          />
-          <Button 
-            icon="/assets/3d388d45b23ed4826566c6c199aff49f93e7acec.svg"
-            buttonCss="icon-btn icon-set-profile"
-            label="Set Profile"
-            onClick={handleSetProfile}
-          />
-        </div>
+            aria-label="Direct Contract"
+          >
+            <img src="/assets/sidebar-icon-5.svg" alt="" />
+          </button>
 
-        {/* Navbar Floating Icons for Mobile */}
-        <div className="navbar-floating-icons">
-          <Button 
-            icon="/assets/f424bb301166452f1d2aae2badd19051c2788323.svg"
-            buttonCss="navbar-icon-btn navbar-icon-bot"
-            onClick={handleBotClick}
-          />
-          <Button 
-            icon="/assets/203519ed928f5759c5c5434e7d71de7598f55b96.svg"
-            buttonCss="navbar-icon-btn navbar-icon-2"
-          />
-          <Button 
-            icon="/assets/141ae2395558d7fc65c358b46cf1beaa163ad655.svg"
-            buttonCss="navbar-icon-btn navbar-icon-3"
-          />
+          {/* DAO - Top Right */}
+          <button 
+            className="hero-icon-btn hero-icon-dao"
+            onClick={handleDAO}
+            aria-label="DAO"
+          >
+            <img src="/assets/sidebar-icon-7.svg" alt="" />
+          </button>
+
+          {/* Post Job - Left Center */}
+          <button 
+            className="hero-icon-btn hero-icon-post"
+            onClick={handlePostJob}
+            aria-label="Post Job"
+          >
+            <img src="/assets/sidebar-icon-2.svg" alt="" />
+          </button>
+
+          {/* Browse Jobs (Search) - Right Center */}
+          <button 
+            className="hero-icon-btn hero-icon-search"
+            onClick={handleBrowseJobs}
+            aria-label="Browse Jobs"
+          >
+            <img src="/assets/hero-search-icon.svg" alt="" />
+          </button>
         </div>
 
         {/* Center Content */}
-        <div className="center-content">
-          <div className="text-content">
-            <h1 className="main-heading">The future of work is decentralised.</h1>
-            <p className="main-description">
+        <div className="hero-center-content">
+          <div className="hero-text-content">
+            <h1 className="hero-main-heading">The future of work is decentralised.</h1>
+            <p className="hero-main-description">
               OpenWork is a decentralised work protocol, allowing people to work 
               directly with each other using blockchain technology, with decentralised governance.
             </p>
           </div>
           
           <button 
-            className="lp-blue-button"
-            onClick={handleLearnMore}
+            className="hero-cta-button"
+            onClick={handleReadWhitepaper}
           >
-            Learn More
-            <img src="/assets/b16a6ff87b2913f8bdc303dda7816c024bd687cb.svg" alt="" className="lp-button-icon" />
+            Read Whitepaper
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.666667 7.33333L7.33333 0.666667M7.33333 0.666667H0.666667M7.33333 0.666667V7.33333" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
         </div>
       </main>

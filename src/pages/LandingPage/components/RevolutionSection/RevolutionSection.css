@@ -1,6 +1,6 @@
 /* LP-12 Revolution Section Styles */
 
-.lp-12-section {
+.lp-13-section {
   width: 100%;
   min-height: 734px;
   display: flex;
@@ -179,7 +179,7 @@
 }
 
 @media (max-width: 768px) {
-  .lp-12-section {
+  .lp-13-section {
     padding: 60px 0;
   }
 

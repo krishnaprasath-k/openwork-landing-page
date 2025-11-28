@@ -6,7 +6,7 @@ const MultiChainSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-10-section" className="lp-section lp-10-section">
+    <section id="lp-11-section" className="lp-section lp-11-section">
       <div className="lp-10-container">
         <div className="lp-10-content">
           <h1 className="lp-10-heading">Work on any chain you are comfortable with.</h1>

@@ -1,6 +1,6 @@
 /* LP-11 Architecture Section Styles */
 
-.lp-11-section {
+.lp-12-section {
   width: 100%;
   min-height: 734px;
   display: flex;
@@ -124,7 +124,7 @@
 }
 
 @media (max-width: 768px) {
-  .lp-11-section {
+  .lp-12-section {
     padding: 60px 0;
   }
 

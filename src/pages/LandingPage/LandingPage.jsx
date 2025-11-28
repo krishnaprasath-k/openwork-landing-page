@@ -7,6 +7,7 @@ import ProfileSection from './components/ProfileSection/ProfileSection';
 import LedgerSection from './components/LedgerSection/LedgerSection';
 import PostJobSection from './components/PostJobSection/PostJobSection';
 import DirectContractSection from './components/DirectContractSection/DirectContractSection';
+import BrowseJobSection from './components/BrowseJobSection/BrowseJobSection';
 import JobProgressSection from './components/JobProgressSection/JobProgressSection';
 import DisputeSection from './components/DisputeSection/DisputeSection';
 import EarnTokenSection from './components/EarnTokenSection/EarnTokenSection';
@@ -34,23 +35,28 @@ const LandingPage = () => {
       <div id="job-progress">
         <DirectContractSection />
       </div>
+      <div id="browse-job">
+        <BrowseJobSection />
+      </div>
+      <div id="dao">
+        <GovernanceSection />
+      </div>
       <div id="raise-dispute">
         <JobProgressSection />
       </div>
       <div id="earn-govern">
         <DisputeSection />
       </div>
-      <div id="dao">
+      <div id="earn-token">
         <EarnTokenSection />
       </div>
       <div id="local-network">
-        <GovernanceSection />
-      </div>
-      <div id="openwork-arch">
         <MultiChainSection />
       </div>
-      <div id="work-revolution">
+      <div id="openwork-arch">
         <ArchitectureSection />
+      </div>
+      <div id="work-revolution">
         <RevolutionSection />
         <ContactSection />
       </div>

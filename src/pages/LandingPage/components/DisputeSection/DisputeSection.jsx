@@ -6,7 +6,7 @@ const DisputeSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-7-section" className="lp-section lp-7-section">
+    <section id="lp-9-section" className="lp-section lp-9-section">
       <div className="lp-7-container">
         <div className="lp-7-content">
           <h1 className="lp-7-heading">Dispute Resolution with Skill Oracles</h1>

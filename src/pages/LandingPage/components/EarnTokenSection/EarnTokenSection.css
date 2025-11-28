@@ -1,6 +1,6 @@
-/* LP-8 Earn Token Section Styles */
+/* LP-10 Earn Token Section Styles */
 
-.lp-8-section {
+.lp-10-section {
   width: 100%;
   min-height: 734px;
   display: flex;
@@ -333,7 +333,7 @@
 }
 
 @media (max-width: 768px) {
-  .lp-8-section {
+  .lp-10-section {
     padding: 60px 0;
   }
 

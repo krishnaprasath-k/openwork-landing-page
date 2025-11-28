@@ -10,7 +10,7 @@ const JobProgressSection = () => {
   };
 
   return (
-    <section id="lp-6-section" className="lp-section lp-6-section">
+    <section id="lp-8-section" className="lp-section lp-8-section">
       <div className="lp-6-container">
         {/* Left Content */}
         <div className="lp-6-content">

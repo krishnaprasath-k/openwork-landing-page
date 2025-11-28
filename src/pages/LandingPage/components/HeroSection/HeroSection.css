@@ -1,219 +1,140 @@
 /* Hero Section (LP-1) */
 
+.lp-1-section {
+  background: #FFFFFF;
+  min-height: 100vh;
+  width: 100%;
+}
+
 /* Main Content Area */
 .landing-main {
   width: 100%;
-  min-height: 100vh;
+  max-width: 1280px;
+  min-height: 734px;
   padding-top: 64px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: visible;
 }
 
-/* Circle Group - Background elements */
-.circle-group {
+/* Hero Design Container - holds circle, glow, and icons */
+.hero-design-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 700px;
-  height: 700px;
-  pointer-events: none;
-  z-index: 1;
+  width: 643px;
+  height: 644px;
+  margin-top: 15px;
 }
 
-/* Radiant Glow */
-.radiant-glow-container {
+/* Glow image - positioned to extend beyond the circle */
+.hero-glow-image {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 735px;
-  height: 735px;
-  background: url('/assets/RadiantGlow.png') center/contain no-repeat;
-  animation: rotate-glow 20s linear infinite;
+  width: 760px;
+  height: 760px;
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes rotate-glow {
+/* Circle SVG image - rotating animation */
+.hero-circle-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  animation: rotate-circle 20s linear infinite;
+}
+
+@keyframes rotate-circle {
   from {
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: translate(-50%, -50%) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
-/* Main Circle */
-.main-circle-bg {
+/* Icon Button Base Style */
+.hero-icon-btn {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 580px;
-  height: 580px;
-  object-fit: contain;
-}
-
-/* Floating Icon Buttons */
-.floating-icons {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1280px;
-  height: 734px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* Hide navbar floating icons on desktop */
-.navbar-floating-icons {
-  display: none;
-}
-
-.icon-btn {
-  position: absolute;
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px;
-  padding: 0 !important;
-  border-radius: 999px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  pointer-events: all;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%);
+  border: none;
+  border-bottom: 1px solid #FFFFFF;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 14.667px !important;
-  gap: 0;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(to bottom, #f4f4f4, #fefefe);
-  border: 0px solid lightgrey;
+  pointer-events: all;
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
-/* Hide label text by default */
-.icon-btn span {
-  font-family: 'Satoshi', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: #767676;
-  width: 0;
-  opacity: 0;
-  padding: 0;
-  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-              padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  display: inline-block;
+.hero-icon-btn:hover {
+  box-shadow: 0px 4px 12px rgba(18, 70, 255, 0.2);
 }
 
-/* Expand on hover */
-.icon-btn:hover {
-  width: auto !important;
-  padding: 14.667px 16px 14.667px 14.667px !important;
-  border-radius: 24px !important;
-  gap: 0;
-  box-shadow: 0 4px 16px rgba(18, 70, 255, 0.25);
-}
-
-.icon-btn:hover span {
-  width: auto;
+.hero-icon-btn img {
+  width: 10.667px;
+  height: 10.667px;
   opacity: 1;
-  padding-left: 8px;
-  color: #1246FF;
+  transition: opacity 0.3s ease;
+  filter: brightness(0.3);
 }
 
-.icon-btn img {
-  width: 14.667px !important;
-  height: 14.667px !important;
-  flex-shrink: 0;
-  display: block;
-  transition: filter 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+.hero-icon-btn:hover img {
+  opacity: 1;
+  filter: brightness(0.1);
 }
 
-.icon-btn:hover img {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(3089%) hue-rotate(220deg) brightness(101%) contrast(104%);
+/* Icon Positions - Based on Figma coordinates relative to circle */
+/* Circle is 643px, icons positioned ON the circle edge at specific angles */
+
+/* Direct Contract - Top Left at approximately 130° on circle */
+/* Positioned exactly on the circle arc */
+.hero-icon-direct {
+  left: 12.5%;
+  top: 16%;
+  transform: translate(-50%, -50%);
 }
 
-/* Individual Icon Positions - Using percentage for responsive scaling */
-.icon-discoverable {
-  left: 27.4%;
-  top: 33%;
+/* DAO - Top Right at approximately 50° on circle */
+/* Positioned exactly on the circle arc */
+.hero-icon-dao {
+  right: 12.5%;
+  top: 16%;
+  transform: translate(50%, -50%);
 }
 
-.icon-discoverable img {
-  width: 11.667px !important;
-  height: 10.667px !important;
+/* Post Job - Left center at 180° */
+.hero-icon-post {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.icon-direct-contract {
-  left: 50%;
-  top: 9.3%;
-  transform: translateX(-50%);
-}
-
-.icon-direct-contract img {
-  width: 10.667px !important;
-  height: 10.667px !important;
-}
-
-.icon-job-progress {
-  left: 63.4%;
-  top: 17.7%;
-}
-
-.icon-job-progress img {
-  width: 11.667px !important;
-  height: 10.667px !important;
-}
-
-.icon-post-job {
-  left: 34.5%;
-  top: 17.7%;
-}
-
-.icon-post-job img {
-  width: 10.667px !important;
-  height: 10.667px !important;
-}
-
-.icon-raise-dispute {
-  left: 69.8%;
-  top: 32.4%;
-}
-
-.icon-raise-dispute img {
-  width: 9.667px !important;
-  height: 10.667px !important;
-}
-
-.icon-dao {
-  left: 71.1%;
-  top: 53.5%;
-}
-
-.icon-dao img {
-  width: 10.667px !important;
-  height: 10.667px !important;
-}
-
-.icon-set-profile {
-  left: 26.5%;
-  top: 54.1%;
-}
-
-.icon-set-profile img {
-  width: 9.467px !important;
-  height: 10.667px !important;
+/* Browse Jobs (Search) - Right center at 0° */
+.hero-icon-search {
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%);
 }
 
 /* Center Content */
-.center-content {
+.hero-center-content {
   position: relative;
   z-index: 10;
   display: flex;
@@ -225,14 +146,14 @@
   padding: 0 20px;
 }
 
-.text-content {
+.hero-text-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
 }
 
-.main-heading {
+.hero-main-heading {
   font-family: 'Satoshi', sans-serif;
   font-size: 40px;
   font-weight: 700;
@@ -242,7 +163,7 @@
   margin: 0;
 }
 
-.main-description {
+.hero-main-description {
   font-family: 'Satoshi', sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -251,563 +172,165 @@
   margin: 0;
 }
 
+/* CTA Button */
+.hero-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #1246FF 23.96%, #4770FF 134.37%);
+  border: 4px solid #1246FF;
+  border-radius: 12px;
+  box-shadow: 0px 4.634px 5.02px rgba(0, 0, 0, 0.20), 0px 0px 0.386px 1.158px rgba(0, 0, 0, 0.05);
+  font-family: 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 10px rgba(18, 70, 255, 0.3);
+}
+
+.hero-cta-button svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* Responsive Design */
 @media (max-width: 1440px) {
-  .floating-icons {
-    width: 1100px;
-    height: 630px;
+  .hero-design-container {
+    width: 580px;
+    height: 580px;
   }
 
-  .circle-group {
-    width: 650px;
-    height: 650px;
-  }
-
-  .radiant-glow-container {
-    width: 680px;
-    height: 680px;
-  }
-
-  .main-circle-bg {
-    width: 540px;
-    height: 540px;
-  }
-
-  .main-heading {
-    font-size: 38px;
-    line-height: 46px;
+  .hero-glow-image {
+    width: 700px;
+    height: 700px;
   }
 }
 
-/* Adjustments for 1280-1400px screens */
-@media (max-width: 1440px) and (min-width: 1281px) {
-  .floating-icons {
-    width: 1050px;
-    height: 615px;
-  }
-
-  .circle-group {
-    width: 635px;
-    height: 635px;
-  }
-
-  .radiant-glow-container {
-    width: 672px;
-    height: 672px;
-  }
-
-  .main-circle-bg {
-    width: 530px;
-    height: 530px;
-  }
-
-  .icon-discoverable {
-    left: 24.8%;
-    top: 32.5%;
-  }
-  
-  .icon-direct-contract {
-    left: 50%;
-    top: 5%;
-    transform: translateX(-50%);
-  }
-  
-  .icon-job-progress {
-    left: 65.6%;
-    top: 15.5%;
-  }
-
-  .icon-post-job {
-    left: 31.8%;
-    top: 15.5%;
-  }
-
-  .icon-raise-dispute {
-    left: 72%;
-    top: 32.5%;
-  }
-
-  .icon-dao {
-    left: 73.3%;
-    top: 54%;
-  }
-
-  .icon-set-profile {
-    left: 23.8%;
-    top: 54.5%;
-  }
-
-  .center-content {
-    margin-top: -30px;
-  }
-}
-
-/* Adjustments for 1280px screens */
 @media (max-width: 1280px) {
-  .floating-icons {
-    width: 1000px;
-    height: 600px;
-  }
-
-  .circle-group {
-    width: 620px;
-    height: 620px;
-  }
-
-  .radiant-glow-container {
-    width: 650px;
-    height: 650px;
-  }
-
-  .main-circle-bg {
+  .hero-design-container {
     width: 520px;
     height: 520px;
   }
 
-  .center-content {
-    margin-top: 0;
+  .hero-glow-image {
+    width: 640px;
+    height: 640px;
   }
-  .icon-discoverable {
-    left: 23.5%;
-    top: 32%;
-  }
-  .icon-direct-contract {
-    left: 50%;
-    top: 3.3%;
-    transform: translateX(-50%);
-  }
-  .icon-job-progress {
-    left: 65.5%;
-    top: 14.5%;
-  }
-
-  .icon-post-job {
-    left: 29.8%;
-    top: 14.5%;
-  }
-
-  .icon-raise-dispute {
-    left: 73%;
-    top: 32%;
-  }
-
-  .icon-dao {
-    left: 74.5%;
-    top: 55%;
-  }
-
-  .icon-set-profile {
-    left: 23%;
-    top: 55.5%;
-  }
-
-  
 }
 
 @media (max-width: 1024px) {
-  .circle-group {
-    width: 600px;
-    height: 600px;
+  .hero-design-container {
+    width: 460px;
+    height: 460px;
   }
 
-  .radiant-glow-container {
-    width: 700px;
-    height: 700px;
+  .hero-glow-image {
+    width: 560px;
+    height: 560px;
   }
 
-  .main-circle-bg {
-    width: 550px;
-    height: 550px;
-  }
-
-  .floating-icons {
-    width: 950px;
-    height: 570px;
-  }
-
-  /* Adjust icon positions for medium screens */
-  .icon-discoverable {
-    left: 20.5%;
-    top: 32%;
-  }
-  .icon-direct-contract {
-    left: 50%;
-    top: -01.3%;
-    transform: translateX(-50%);
-  }
-  .icon-job-progress {
-    left: 67.5%;
-    top: 10.5%;
-  }
-
-  .icon-post-job {
-    left: 28.5%;
-    top: 10.5%;
-  }
-
-  .icon-raise-dispute {
-    left: 76%;
-    top: 32%;
-  }
-
-  .icon-dao {
-    left: 76.5%;
-    top: 55%;
-  }
-
-  .icon-set-profile {
-    left: 20%;
-    top: 55.5%;
-  }
-
-  .center-content {
+  .hero-center-content {
     gap: 40px;
-    margin-top: -20px;
   }
 
-  .text-content {
-    gap: 10px;
-  }
-
-  .main-heading {
+  .hero-main-heading {
     font-size: 36px;
     line-height: 44px;
   }
 
-  .main-description {
+  .hero-main-description {
     font-size: 15px;
     line-height: 22px;
   }
 }
 
 @media (max-width: 768px) {
-  .circle-group {
-    width: 500px;
-    height: 500px;
+  .landing-main {
+    min-height: 100vh;
+    padding-top: 80px;
   }
 
-  .radiant-glow-container {
-    width: 600px;
-    height: 600px;
+  .hero-design-container {
+    width: 380px;
+    height: 380px;
   }
 
-  .main-circle-bg {
-    width: 460px;
-    height: 460px;
+  .hero-glow-image {
+    width: 480px;
+    height: 480px;
   }
 
-  .floating-icons {
-    width: 780px;
-    height: 470px;
+  .hero-icon-btn {
+    width: 28px;
+    height: 28px;
   }
 
-  /* Adjust icon positions for tablets - show only 3 icons on arc */
-  .icon-discoverable {
-    display: none;
-  }
-  
-  .icon-direct-contract {
-    left: 54px;
-    top: 116px;
-    transform: none;
+  .hero-icon-btn img {
+    width: 9px;
+    height: 9px;
   }
 
-  .icon-job-progress {
-    left: 50%;
-    top: 85px;
-    transform: translateX(-50%);
-  }
-
-  .icon-post-job {
-    left: 306px;
-    top: 116px;
-  }
-
-  .icon-raise-dispute {
-    display: none;
-  }
-
-  .icon-dao {
-    display: none;
-  }
-
-  .icon-set-profile {
-    display: none;
-  }
-
-  .icon-btn {
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  .icon-btn img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  /* Individual icon sizes for tablet */
-  .icon-discoverable img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-direct-contract img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-job-progress img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-post-job img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-raise-dispute img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-dao img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .icon-set-profile img {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .center-content {
+  .hero-center-content {
     max-width: 90%;
     gap: 36px;
-    margin-top: 40px;
   }
 
-  .text-content {
-    gap: 10px;
-  }
-
-  .main-heading {
+  .hero-main-heading {
     font-size: 32px;
     line-height: 40px;
     letter-spacing: -1.2px;
   }
 
-  .main-description {
+  .hero-main-description {
     font-size: 14px;
     line-height: 21px;
-  }
-
-  /* Add navbar icons as floating icons in mobile */
-  .navbar-floating-icons {
-    display: flex;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-    height: 380px;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  .navbar-icon-btn {
-    position: absolute;
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 50% !important;
-    background: white;
-    border: 2px solid #E5E5E5;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    pointer-events: all;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .navbar-icon-btn:hover {
-    transform: scale(1.1);
-    border-color: #1246FF;
-    box-shadow: 0 4px 16px rgba(18, 70, 255, 0.25);
-  }
-
-  .navbar-icon-btn img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  /* Individual navbar icon sizes for tablet */
-  .navbar-icon-bot img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .navbar-icon-2 img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .navbar-icon-3 img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  /* Position navbar icons in a circle */
-  .navbar-icon-bot {
-    left: 50%;
-    top: 8%;
-    transform: translateX(-50%);
-  }
-
-  .navbar-icon-2 {
-    right: 15%;
-    top: 30%;
-  }
-
-  .navbar-icon-3 {
-    left: 15%;
-    top: 30%;
   }
 }
 
 @media (max-width: 480px) {
-  .circle-group {
-    width: 350px;
-    height: 350px;
+  .hero-design-container {
+    width: 300px;
+    height: 300px;
   }
 
-  .radiant-glow-container {
-    width: 590px;
-    height: 560px;
-    transform: translate(-50%, -40%);
+  .hero-glow-image {
+    width: 380px;
+    height: 380px;
   }
 
-  .main-circle-bg {
-    width: 500px;
-    height: 550px;
-    transform: translate(-50%, -40%);
-    object-fit: cover;
-    object-position: center top;
+  .hero-icon-btn {
+    width: 24px;
+    height: 24px;
   }
 
-  .floating-icons {
-    width: 6500px;
-    height: 3800px;
+  .hero-icon-btn img {
+    width: 8px;
+    height: 8px;
   }
 
-  .icon-btn {
-    width: 24px !important;
-    height: 24px !important;
-  }
-
-  .icon-btn img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  /* Individual icon sizes for mobile */
-  .icon-discoverable img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-direct-contract img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-job-progress img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-post-job img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-raise-dispute img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-dao img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .icon-set-profile img {
-    width: 8px !important;
-    height: 8px !important;
-  }
-
-  .center-content {
+  .hero-center-content {
     gap: 32px;
-    margin-top: -100px;
   }
 
-  .text-content {
-    gap: 8px;
-  }
-
-  .main-heading {
+  .hero-main-heading {
     font-size: 28px;
     line-height: 36px;
   }
 
-  .main-description {
+  .hero-main-description {
     font-size: 13px;
     line-height: 20px;
   }
 
-  /* Adjust navbar floating icons for smaller mobile */
-  .navbar-floating-icons {
-    width: 320px;
-    height: 320px;
-  }
-
-  .navbar-icon-btn {
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  .navbar-icon-btn img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  /* Individual navbar icon sizes for mobile */
-  .navbar-icon-bot img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .navbar-icon-2 img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .navbar-icon-3 img {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .navbar-icon-bot {
-    top: -25%;
-  }
-
-  .navbar-icon-2 {
-    right: 18%;
-    top: -20%;
-  }
-
-  .navbar-icon-3 {
-    left: 18%;
-    top: -20%;
+  .hero-cta-button {
+    font-size: 13px;
+    padding: 8px 14px;
   }
 }

@@ -1,6 +1,6 @@
-/* LP-7 Dispute Section Styles */
+/* LP-9 Dispute Section Styles */
 
-.lp-7-section {
+.lp-9-section {
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -348,7 +348,7 @@
 /* Responsive Design */
 @media (max-width: 1440px) {
   .lp-7-container {
-    padding: 0 120px;
+    padding: 0 80px;
     gap: 70px;
   }
 
@@ -369,7 +369,7 @@
 
 @media (max-width: 1024px) {
   .lp-7-container {
-    padding: 0 80px;
+    padding: 0 40px;
     gap: 50px;
     flex-direction: column;
   }
@@ -399,12 +399,12 @@
 }
 
 @media (max-width: 768px) {
-  .lp-7-section {
+  .lp-9-section {
     padding: 60px 0;
   }
 
   .lp-7-container {
-    padding: 0 40px;
+    padding: 0 20px;
     gap: 40px;
   }
 

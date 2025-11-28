@@ -1,144 +1,223 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import './LandingSidebar.css';
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import "./LandingSidebar.css";
 
 const LandingSidebar = () => {
-  const [activeSection, setActiveSection] = useState('discoverable');
+  const [activeSection, setActiveSection] = useState("lp-4-section");
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const pathRef = useRef(null);
 
   const sidebarItems = [
-    { id: 1, icon: '/assets/sidebar-icon-1.svg', label: 'Discoverable', section: 'lp-2-section', activeY: -150 },
-    { id: 2, icon: '/assets/sidebar-icon-2.svg', label: 'Job/Contract', section: 'lp-4-section', activeY: -200 },
-    { id: 3, icon: '/assets/sidebar-icon-3.svg', label: 'Direct Contract', section: 'lp-5-section', activeY: -230 },
-    { id: 4, icon: '/assets/sidebar-icon-4.svg', label: 'Job In Progress', section: 'lp-6-section', activeY: -270 },
-    { id: 5, icon: '/assets/sidebar-icon-5.svg', label: 'Raise Dispute', section: 'lp-7-section', activeY: -300 },
-    { id: 6, icon: '/assets/sidebar-icon-6.svg', label: 'Earn & Govern', section: 'lp-8-section', activeY: -320 },
-    { id: 7, icon: '/assets/sidebar-icon-7.svg', label: 'DAO', section: 'lp-9-section', activeY: -350 },
-    { id: 8, icon: '/assets/sidebar-icon-8.svg', label: 'Local Network', section: 'lp-10-section', activeY: -380 },
-    { id: 9, icon: '/assets/sidebar-icon-9.svg', label: 'Openwork Arch', section: 'lp-11-section', activeY: -420 },
-    { id: 10, icon: '/assets/sidebar-icon-10.svg', label: 'Work Revolution', section: 'lp-12-section', activeY: -450 },
+    { id: 1, icon: "/assets/sidebar-icon-1.svg", label: "Home", section: "lp-2-section" },
+    { id: 2, icon: "/assets/sidebar-icon-2.svg", label: "Post Job", section: "lp-4-section" },
+    { id: 3, icon: "/assets/sidebar-icon-3.svg", label: "Direct Contract", section: "lp-5-section" },
+    { id: 4, icon: "/assets/search-icon.svg", label: "Browse Jobs", section: "lp-6-section" },
+    { id: 5, icon: "/assets/sidebar-icon-7.svg", label: "DAO", section: "lp-7-section", isDao: true },
+    { id: 6, icon: "/assets/sidebar-icon-4.svg", label: "Job Progress", section: "lp-8-section" },
+    { id: 7, icon: "/assets/sidebar-icon-5.svg", label: "Disputes", section: "lp-9-section" },
   ];
 
+  // Get the index of the currently active section
+  const activeIndex = sidebarItems.findIndex(item => item.section === activeSection);
+
+  /** ---------------------------------------------------------
+   *  GET POINT ON CURVE - Calculate position along the SVG path
+   *  percent: 0 to 1, where 0.5 is the center (deepest part of curve)
+   * ---------------------------------------------------------*/
+  const getPointOnCurve = (percent) => {
+    // Clamp percent between 0 and 1
+    const clampedPercent = Math.max(0, Math.min(1, percent));
+    
+    // Always use the path element for accurate positioning
+    if (pathRef.current) {
+      const path = pathRef.current;
+      const totalLength = path.getTotalLength();
+      const point = path.getPointAtLength(totalLength * clampedPercent);
+      
+      // Scale from SVG coordinates (viewBox 0 0 120 800) to actual element size
+      const svg = path.ownerSVGElement;
+      const svgRect = svg.getBoundingClientRect();
+      const scaleX = svgRect.width / 120;
+      const scaleY = svgRect.height / 800;
+      
+      return { 
+        x: point.x * scaleX, 
+        y: point.y * scaleY 
+      };
+    }
+    
+    // Fallback: calculate quadratic bezier curve mathematically
+    // Matches: M 95 0 Q 20 400, 95 850
+    const startX = 95, startY = 0;
+    const controlX = 20, controlY = 400;
+    const endX = 95, endY = 850;
+    
+    const t = clampedPercent;
+    const mt = 1 - t;
+    
+    // Quadratic bezier formula: B(t) = (1-t)²P0 + 2(1-t)tP1 + t²P2
+    const x = mt * mt * startX + 2 * mt * t * controlX + t * t * endX;
+    const y = mt * mt * startY + 2 * mt * t * controlY + t * t * endY;
+    
+    return { x, y };
+  };
+
+  /** ---------------------------------------------------------
+   *  CALCULATE ICON POSITION BASED ON ACTIVE SECTION
+   *  Icons cluster around the center, with active at 0.5
+   *  Active icon has extra gap from neighbors
+   * ---------------------------------------------------------*/
+  const getIconPosition = (itemIndex) => {
+    const baseSpacing = 0.09; // Normal spacing between icons
+    const activeGap = 0.05; // Extra gap around the active icon
+    
+    // Calculate offset from active icon
+    const offsetFromActive = itemIndex - activeIndex;
+    
+    // Active icon is at center (0.5)
+    const centerPercent = 0.5;
+    
+    let percent = centerPercent;
+    
+    if (offsetFromActive !== 0) {
+      // Add extra gap for icons adjacent to active
+      const direction = offsetFromActive > 0 ? 1 : -1;
+      const absOffset = Math.abs(offsetFromActive);
+      
+      // First icon after active gets extra gap, rest have normal spacing
+      percent = centerPercent + (direction * activeGap) + (offsetFromActive * baseSpacing);
+    }
+    
+    return getPointOnCurve(percent);
+  };
+
+  /** ---------------------------------------------------------
+   *  SCROLL SECTION TRACKING
+   * ---------------------------------------------------------*/
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-      
-      // Check if profile section (lp-2-section) is reached
-      const profileSection = document.getElementById('lp-2-section');
-      if (profileSection) {
-        const profileTop = profileSection.offsetTop;
-        setSidebarVisible(window.scrollY >= profileTop - 200);
+      const scrollMid = window.scrollY + window.innerHeight / 2;
+      const profile = document.getElementById("lp-2-section");
+      const disputeSection = document.getElementById("lp-9-section");
+
+      if (profile && disputeSection) {
+        // Show sidebar after profile section, hide after disputes section
+        const showStart = profile.offsetTop - 200;
+        const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
+        setSidebarVisible(window.scrollY >= showStart && scrollMid < hideAfter);
+      } else if (profile) {
+        setSidebarVisible(window.scrollY >= profile.offsetTop - 200);
       }
 
-      // Find which section is currently in view
       for (let i = sidebarItems.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sidebarItems[i].section);
-        if (section) {
-          const sectionTop = section.offsetTop;
-          if (scrollPosition >= sectionTop) {
-            setActiveSection(sidebarItems[i].section);
-            break;
-          }
+        const sec = document.getElementById(sidebarItems[i].section);
+        if (sec && scrollMid >= sec.offsetTop) {
+          setActiveSection(sidebarItems[i].section);
+          break;
         }
       }
     };
 
-    // Initial check
     handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sidebarItems]);
 
-    // Add scroll listener
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Force re-render when path is ready
+  const [pathReady, setPathReady] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setPathReady(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
-  const handleScrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  // Get the index of the active section
-  const activeIndex = sidebarItems.findIndex(item => item.section === activeSection);
-
-  // Calculate positions for each icon
-  const getIconPosition = (index) => {
-    const groupSpacing = 40;
-    
-    if (activeIndex === -1) {
-      // Initial state
-      const targetPosition = -150;
-      return {
-        y: targetPosition + (index * 48),
-        opacity: index > 5 ? 0 : 1,
-        scale: 1,
-      };
-    }
-    
-    const distanceFromActive = index - activeIndex;
-    const targetPosition = sidebarItems[activeIndex].activeY; // Use custom active position
-    const basePosition = targetPosition + 200; // Starting position for icons below active
-    
-    if (distanceFromActive === 0) {
-      // Active icon - use custom position
-      return {
-        y: targetPosition,
-        opacity: 1,
-        scale: 1.15,
-      };
-    } else if (distanceFromActive < 0) {
-      // Icons above (already passed)
-      const absDistance = Math.abs(distanceFromActive);
-      return {
-        y: targetPosition + (distanceFromActive * groupSpacing),
-        opacity: Math.max(0, 1 - absDistance * 0.4),
-        scale: Math.max(0.7, 1 - absDistance * 0.15),
-      };
-    } else {
-      // Icons below (upcoming)
-      return {
-        y: basePosition + ((distanceFromActive - 1) * groupSpacing),
-        opacity: Math.max(0.3, 1 - (distanceFromActive - 1) * 0.15),
-        scale: Math.max(0.85, 1 - (distanceFromActive - 1) * 0.05),
-      };
-    }
-  };
-
   return (
-    <aside className={`landing-sidebar ${sidebarVisible ? 'visible' : ''}`}>
-      {/* Vertical gradient line */}
-      <div className="sidebar-line"></div>
+    <aside className={`landing-sidebar ${sidebarVisible ? "visible" : ""}`}>
+      
+      {/* SVG Curve Line - Smooth arc from top-right to bottom-right */}
+      <svg className="sidebar-line" viewBox="0 0 120 800" preserveAspectRatio="none">
+        {/* Define radiant glow gradient */}
+        <defs>
+          <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#4D7FFF" stopOpacity="0" />
+            <stop offset="40%" stopColor="#4D7FFF" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#1246FF" stopOpacity="1" />
+            <stop offset="60%" stopColor="#4D7FFF" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#4D7FFF" stopOpacity="0" />
+          </linearGradient>
+          <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
 
-      {/* Navigation icons */}
+        {/* Base curve line - subtle gray */}
+        <path
+          ref={pathRef}
+          id="curvePath"
+          d="M 95 0 Q 20 400, 95 850"
+          stroke="rgba(180, 200, 255, 0.35)"
+          strokeWidth="1.5"
+          fill="none"
+          strokeLinecap="butt"
+        />
+        
+        {/* Radiant glow traveling effect */}
+        <path
+          d="M 95 0 Q 20 400, 95 850"
+          stroke="url(#glowGradient)"
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="butt"
+          className="radiant-glow-line"
+          filter="url(#softGlow)"
+        />
+      </svg>
+
+      {/* Navigation Icons */}
       <nav className="sidebar-nav">
         {sidebarItems.map((item, index) => {
-          const isActive = activeSection === item.section;
           const position = getIconPosition(index);
-          const distanceFromActive = index - activeIndex;
+          const isActive = activeSection === item.section;
           
-          // For mobile: show active and 2 on each side
-          const isNearActive = Math.abs(distanceFromActive) <= 2;
-          
+          // Calculate visibility - hide icons that are too far from active
+          const distanceFromActive = Math.abs(index - activeIndex);
+          const isVisible = distanceFromActive <= 4;
+          const opacity = isVisible ? Math.max(0.5, 1 - distanceFromActive * 0.12) : 0;
+
+          // Icon size (matches CSS)
+          const iconSize = 36;
+          // Center all icons on the curve - use half icon size for both x and y
+          const xOffset = iconSize / 2;
+          const yOffset = iconSize / 2;
+
           return (
             <motion.button
               key={item.id}
-              className={`sidebar-nav-item ${isActive ? 'active' : ''} ${isNearActive ? 'near-active' : ''}`}
-              onClick={() => handleScrollToSection(item.section)}
-              aria-label={item.label}
+              className={`sidebar-nav-item ${isActive ? "active" : ""}`}
+              onClick={() => scrollTo(item.section)}
+              style={{
+                transformOrigin: `${iconSize / 2}px ${iconSize / 2}px`
+              }}
               animate={{
-                top: position.y,
-                opacity: position.opacity,
-                scale: position.scale,
+                x: position.x - xOffset,
+                y: position.y - yOffset,
+                opacity: opacity,
+                scale: isActive ? 1 : 1,
               }}
               transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
+                type: "spring",
+                stiffness: 200,
+                damping: 25,
                 mass: 0.8,
-              }}
-              style={{
-                zIndex: isActive ? 10 : 1,
-                pointerEvents: position.opacity < 0.2 ? 'none' : 'auto',
               }}
             >
               <div className="icon-wrapper">
