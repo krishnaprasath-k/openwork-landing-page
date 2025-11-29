@@ -5,6 +5,7 @@ import "./LandingSidebar.css";
 const LandingSidebar = () => {
   const [activeSection, setActiveSection] = useState("lp-4-section");
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const pathRef = useRef(null);
 
   const sidebarItems = [
@@ -96,6 +97,9 @@ const LandingSidebar = () => {
    * ---------------------------------------------------------*/
   useEffect(() => {
     const handleScroll = () => {
+      // Don't update active section during click animation
+      if (isAnimating) return;
+      
       const scrollMid = window.scrollY + window.innerHeight / 2;
       const profile = document.getElementById("lp-2-section");
       const disputeSection = document.getElementById("lp-9-section");
@@ -121,11 +125,66 @@ const LandingSidebar = () => {
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [sidebarItems]);
+  }, [sidebarItems, isAnimating]);
 
   const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (isAnimating) return; // Prevent multiple clicks during animation
+    
+    const currentEl = document.getElementById(activeSection);
+    const targetEl = document.getElementById(id);
+    
+    if (!targetEl || id === activeSection) return;
+    
+    // Determine direction: forward (next) or backward (previous)
+    const currentIndex = sidebarItems.findIndex(item => item.section === activeSection);
+    const targetIndex = sidebarItems.findIndex(item => item.section === id);
+    const isForward = targetIndex > currentIndex;
+    
+    setIsAnimating(true);
+    
+    // Set active section IMMEDIATELY on click to prevent icon jumping
+    setActiveSection(id);
+    
+    // Prevent scroll jank during animation
+    document.body.style.overflow = 'hidden';
+    
+    // Find the closest lp-section parent for both elements
+    const getSection = (el) => {
+      let parent = el;
+      while (parent && !parent.classList.contains('lp-section')) {
+        parent = parent.parentElement;
+      }
+      return parent || el;
+    };
+    
+    const currentSection = getSection(currentEl);
+    const targetSection = getSection(targetEl);
+    
+    // Scroll to target section first (instant)
+    targetEl.scrollIntoView({ behavior: "instant", block: "start" });
+    
+    // Apply animations after a tiny delay to let scroll settle
+    requestAnimationFrame(() => {
+      if (currentSection) {
+        currentSection.classList.add(isForward ? 'page-exit' : 'page-exit-reverse');
+      }
+      
+      if (targetSection) {
+        targetSection.classList.add(isForward ? 'page-enter' : 'page-enter-reverse');
+      }
+    });
+    
+    // Clean up after animation completes
+    setTimeout(() => {
+      if (currentSection) {
+        currentSection.classList.remove('page-exit', 'page-exit-reverse');
+      }
+      if (targetSection) {
+        targetSection.classList.remove('page-enter', 'page-enter-reverse');
+      }
+      document.body.style.overflow = '';
+      setIsAnimating(false);
+    }, 600);
   };
 
   // Force re-render when path is ready
@@ -136,7 +195,7 @@ const LandingSidebar = () => {
   }, []);
 
   return (
-    <aside className={`landing-sidebar ${sidebarVisible ? "visible" : ""}`}>
+    <aside className={`landing-sidebar ${sidebarVisible ? "visible" : ""} ${isAnimating ? "animating" : ""}`}>
       
       {/* SVG Curve Line - Smooth arc from top-right to bottom-right */}
       <svg className="sidebar-line" viewBox="0 0 120 800" preserveAspectRatio="none">
@@ -159,12 +218,12 @@ const LandingSidebar = () => {
           </filter>
         </defs>
 
-        {/* Base curve line - subtle gray */}
+        {/* Base curve line - invisible but needed for path calculations */}
         <path
           ref={pathRef}
           id="curvePath"
           d="M 95 0 Q 20 400, 95 850"
-          stroke="rgba(180, 200, 255, 0.35)"
+          stroke="transparent"
           strokeWidth="1.5"
           fill="none"
           strokeLinecap="butt"

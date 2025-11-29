@@ -12,7 +12,7 @@ const PostJobSection = () => {
   };
 
   return (
-    <section id="lp-4-section" className="lp-4-section">
+    <section id="lp-4-section" className="lp-section lp-4-section">
       <div className="lp-4-container">
         {/* Left Content */}
         <div className="lp-4-content">

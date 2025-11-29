@@ -6,7 +6,7 @@ const ArchitectureSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-12-section" className="lp-12-section">
+    <section id="lp-12-section" className="lp-section lp-12-section">
       <div className="lp-11-container">
         <div className="lp-11-content">
           <h2 className="lp-11-heading">The OpenWork Architecture</h2>

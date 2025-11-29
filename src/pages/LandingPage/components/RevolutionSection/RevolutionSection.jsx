@@ -6,7 +6,7 @@ const RevolutionSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="lp-13-section" className="lp-13-section">
+    <section id="lp-13-section" className="lp-section lp-13-section">
       <div className="lp-12-container">
         <div className="lp-12-content">
           <h2 className="lp-12-heading">Join the Work Revolution</h2>

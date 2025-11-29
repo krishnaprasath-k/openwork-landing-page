@@ -35,7 +35,7 @@
 
 /* Radiant glow traveling effect */
 .radiant-glow-line {
-  stroke-dasharray: 350 1200;
+  stroke-dasharray: 600 1800;
   stroke-dashoffset: 1200;
   animation: radiantTravel 10s linear infinite;
   opacity: 1;
@@ -46,7 +46,7 @@
     stroke-dashoffset: 1200;
   }
   100% {
-    stroke-dashoffset: -350;
+    stroke-dashoffset: -4050;
   }
 }
 
@@ -116,8 +116,8 @@
   width: 14px;
   height: 14px;
   object-fit: contain;
-  transition: filter 0.3s ease;
-  opacity: 0.6;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+  opacity: 0.85;
 }
 
 /* Hover state - expand to show label */
@@ -199,6 +199,12 @@
 .sidebar-nav-item.active:hover .nav-label {
   opacity: 1;
   width: auto;
+}
+
+/* Animating state - disable clicks during page transition */
+.landing-sidebar.animating .sidebar-nav-item {
+  pointer-events: none;
+  cursor: wait;
 }
 
 /* Responsive adjustments */

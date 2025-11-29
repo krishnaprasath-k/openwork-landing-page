@@ -73,7 +73,7 @@ const BrowseJobSection = () => {
   };
 
   return (
-    <section id="lp-6-section" className="browse-job-section">
+    <section id="lp-6-section" className="lp-section browse-job-section">
       <div className="browse-job-container">
         {/* Left Content */}
         <div className="browse-job-content">
