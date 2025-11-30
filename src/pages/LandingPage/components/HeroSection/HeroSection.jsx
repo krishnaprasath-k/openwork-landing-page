@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HeroSection.css';
 
@@ -6,44 +6,58 @@ const HeroSection = () => {
   const navigate = useNavigate();
   const [isExpanding, setIsExpanding] = useState(false);
   const [activeIcon, setActiveIcon] = useState(null);
-  const [expandDirection, setExpandDirection] = useState(null); // 'left' or 'right'
+  const [expandDirection, setExpandDirection] = useState(null);
+  const morphPathRef = useRef(null);
 
   const handleReadWhitepaper = () => {
     navigate('/whitepaper');
   };
 
-  // Left side icons: direct, post, progress
-  const leftSideIcons = ['direct', 'post', 'progress'];
-  // Right side icons: dao, search, disputes
-  const rightSideIcons = ['dao', 'search', 'disputes'];
-  // Top icon
-  const topIcons = ['home'];
-
-  // Navigate with circle expand animation
+  // Navigate with circle curve morph animation
   const navigateWithExpand = (sectionId, iconName) => {
     if (isExpanding) return;
     
     setActiveIcon(iconName);
     setIsExpanding(true);
-    
-    // Set expand direction based on specific icon position
     setExpandDirection(iconName);
     
-    // Add class to body to trigger sidebar visibility
+    // Add class to body to trigger the portal transition
     document.body.classList.add('hero-transitioning');
     
-    // After icon reaches sidebar, immediately scroll to section
+    // Get the target section and add the unshrink animation class
+    const targetEl = document.getElementById(sectionId);
+    let targetSection = null;
+    
+    if (targetEl) {
+      // Find the lp-section parent
+      let section = targetEl;
+      while (section && !section.classList.contains('lp-section')) {
+        section = section.parentElement;
+      }
+      targetSection = section;
+      if (section) {
+        section.classList.add('page-unshrink-from-circle');
+      }
+    }
+    
+    // After animation completes, scroll to section and reset states
     setTimeout(() => {
-      const targetEl = document.getElementById(sectionId);
+      // Remove the unshrink class
+      if (targetSection) {
+        targetSection.classList.remove('page-unshrink-from-circle');
+      }
+      
+      // NOW scroll to the target section (after animation is done)
       if (targetEl) {
         targetEl.scrollIntoView({ behavior: 'instant', block: 'start' });
       }
+      
       // Reset states
       setIsExpanding(false);
       setActiveIcon(null);
       setExpandDirection(null);
       document.body.classList.remove('hero-transitioning');
-    }, 450); // Navigate right as icon reaches sidebar
+    }, 1000);
   };
 
   const handleHome = () => navigateWithExpand('lp-1-section', 'home');
@@ -54,7 +68,7 @@ const HeroSection = () => {
   const handleJobProgress = () => navigateWithExpand('lp-8-section', 'progress');
   const handleDisputes = () => navigateWithExpand('lp-9-section', 'disputes');
 
-  // Get class for icon based on whether it's the active one - each icon gets its own travel animation
+  // Get class for icon based on whether it's the active one
   const getIconClass = (iconName, baseClass) => {
     if (!isExpanding) return baseClass;
     if (activeIcon === iconName) {
@@ -77,7 +91,49 @@ const HeroSection = () => {
 
   return (
     <section className="lp-section lp-1-section">
+      {/* Circle Portal Mask - reveals new page inside expanding circle */}
+      {isExpanding && (
+        <div className="circle-portal-overlay">
+          <div className="circle-portal-mask"></div>
+        </div>
+      )}
+      
       <main className="landing-main">
+        {/* SVG Morphing Path - connects circle to sidebar */}
+        <svg 
+          className={`hero-morph-path-svg ${isExpanding ? 'animating' : ''} ${activeIcon ? `morph-${activeIcon}` : ''}`}
+          viewBox="0 0 1200 800" 
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <defs>
+            <linearGradient id="morphGradient" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#4D7FFF" stopOpacity="0.3" />
+              <stop offset="30%" stopColor="#1246FF" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#1246FF" stopOpacity="1" />
+              <stop offset="70%" stopColor="#1246FF" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#4D7FFF" stopOpacity="0.3" />
+            </linearGradient>
+            <filter id="morphGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          {/* Path that morphs from circle arc to sidebar curve */}
+          <path
+            ref={morphPathRef}
+            className="morph-path"
+            d="M 600 100 Q 750 400, 600 700"
+            stroke="url(#morphGradient)"
+            strokeWidth="2.5"
+            fill="none"
+            filter="url(#morphGlow)"
+          />
+        </svg>
+
         {/* Hero Design Container - contains circle + glow + icons */}
         <div className={getContainerClass()}>
           {/* Outer glow image */}

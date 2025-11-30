@@ -7,6 +7,40 @@
    respective component CSS files.
    ============================================ */
 
+/* ============================================
+   PAGE UNSHRINK FROM CIRCLE - Portal Transition
+   The page starts small (inside circle) and grows
+   ============================================ */
+.lp-section.page-unshrink-from-circle {
+  animation: pageUnshrinkFromCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+  will-change: transform, opacity;
+  /* Fix the section in viewport center during animation */
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+}
+
+@keyframes pageUnshrinkFromCircle {
+  0% {
+    transform: scale(0.25) translate(40%, -30%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translate(0%, 0%);
+    opacity: 1;
+  }
+}
+
 /* Main Landing Page Container */
 .landing-page {
   width: 100vw;

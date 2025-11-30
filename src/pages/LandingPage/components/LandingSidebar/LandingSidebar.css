@@ -22,10 +22,23 @@
   pointer-events: auto;
 }
 
-/* During hero transition - sidebar stays hidden until page scrolls */
-body.hero-transitioning .landing-sidebar {
-  opacity: 0;
+/* During hero transition - sidebar appears quickly with circle */
+body.hero-transitioning .landing-sidebar.visible {
+  opacity: 1;
   pointer-events: none;
+  z-index: 1100;
+  animation: sidebarAppearWithPage 0.35s ease-out forwards;
+}
+
+@keyframes sidebarAppearWithPage {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5) translate(20%, -15%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) translate(0%, 0%);
+  }
 }
 
 /* Curved line SVG */
