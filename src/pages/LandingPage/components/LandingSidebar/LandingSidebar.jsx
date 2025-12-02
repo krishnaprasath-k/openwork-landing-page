@@ -7,8 +7,8 @@ const LandingSidebar = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false); // Circle expanded state (after first click)
-  const [heroOffset, setHeroOffset] = useState(0); // Track scroll offset for circle positioning
   const circleRef = useRef(null);
+  const sidebarRef = useRef(null); // Ref for direct DOM manipulation to avoid jiggle
 
   const sidebarItems = [
     { id: 1, icon: "/assets/sidebar-icon-1.svg", label: "Home", section: "lp-1-section", angle: 270 },           // Top (12 o'clock)
@@ -85,78 +85,81 @@ const LandingSidebar = () => {
    *  SCROLL SECTION TRACKING
    * ---------------------------------------------------------*/
   useEffect(() => {
-    let transitionTimeout = null;
+    let lastScrollY = -1;
+    let rafId = null;
     
     const handleScroll = () => {
-      if (isAnimating) return;
+      // Use requestAnimationFrame for smooth updates
+      if (rafId) return;
       
-      const scrollY = window.scrollY;
-      const scrollMid = scrollY + window.innerHeight / 2;
-      const heroSection = document.getElementById("lp-1-section");
-      const disputeSection = document.getElementById("lp-9-section");
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (isAnimating) return;
+        
+        const scrollY = window.scrollY;
+        
+        // Skip if scroll position hasn't changed enough
+        if (Math.abs(scrollY - lastScrollY) < 1) return;
+        lastScrollY = scrollY;
+        
+        const scrollMid = scrollY + window.innerHeight / 2;
+        const heroSection = document.getElementById("lp-1-section");
+        const disputeSection = document.getElementById("lp-9-section");
 
-      // When at hero - show circle (not expanded)
-      // When past hero - show expanded sidebar
-      if (heroSection) {
-        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-        const shouldBeExpanded = scrollY >= heroBottom - 200;
-        
-        // Track scroll offset for circle positioning (scrolls with hero)
-        if (!shouldBeExpanded) {
-          setHeroOffset(scrollY);
-        }
-        
-        // If mode is changing, hide first then switch
-        if (shouldBeExpanded !== isExpanded) {
-          setSidebarVisible(false);
-          clearTimeout(transitionTimeout);
-          transitionTimeout = setTimeout(() => {
+        // When at hero - show circle (not expanded)
+        // When past hero - show expanded sidebar
+        if (heroSection) {
+          const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+          const shouldBeExpanded = scrollY >= heroBottom - 200;
+          
+          // Track scroll offset for circle positioning (scrolls with hero)
+          // Use transform for GPU-accelerated smooth scrolling
+          if (!shouldBeExpanded && sidebarRef.current) {
+            sidebarRef.current.style.transform = `translate(-50%, calc(-50% - ${scrollY}px)) scale(1)`;
+          } else if (shouldBeExpanded && sidebarRef.current) {
+            sidebarRef.current.style.transform = '';
+          }
+          
+          // Update expanded state - CSS handles the smooth transition
+          if (shouldBeExpanded !== isExpanded) {
             setIsExpanded(shouldBeExpanded);
-            // Show after mode switch
-            setTimeout(() => {
-              if (shouldBeExpanded) {
-                if (disputeSection) {
-                  const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
-                  setSidebarVisible(scrollMid < hideAfter);
-                } else {
-                  setSidebarVisible(true);
-                }
-              } else {
-                setSidebarVisible(true);
-              }
-            }, 50);
-          }, 200);
-        } else {
-          // Same mode, just update visibility
+          }
+          
+          // Update visibility - only when expanded
           if (shouldBeExpanded) {
+            // Sidebar mode - hide after disputes
             if (disputeSection) {
               const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
-              setSidebarVisible(scrollMid < hideAfter);
-            } else {
-              setSidebarVisible(true);
+              const newVisible = scrollMid < hideAfter;
+              if (newVisible !== sidebarVisible) {
+                setSidebarVisible(newVisible);
+              }
             }
-          } else {
-            setSidebarVisible(true);
           }
         }
-      }
 
-      for (let i = sidebarItems.length - 1; i >= 0; i--) {
-        const sec = document.getElementById(sidebarItems[i].section);
-        if (sec && scrollMid >= sec.offsetTop) {
-          setActiveSection(sidebarItems[i].section);
-          break;
+        // Only update active section when expanded (not on hero)
+        if (isExpanded) {
+          for (let i = sidebarItems.length - 1; i >= 0; i--) {
+            const sec = document.getElementById(sidebarItems[i].section);
+            if (sec && scrollMid >= sec.offsetTop) {
+              if (activeSection !== sidebarItems[i].section) {
+                setActiveSection(sidebarItems[i].section);
+              }
+              break;
+            }
+          }
         }
-      }
+      });
     };
 
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearTimeout(transitionTimeout);
+      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [sidebarItems, isAnimating, isExpanded]);
+  }, [sidebarItems, isAnimating, isExpanded, sidebarVisible, activeSection]);
 
   const scrollTo = (id) => {
     if (isAnimating) return;
@@ -185,7 +188,7 @@ const LandingSidebar = () => {
           targetEl.scrollIntoView({ behavior: 'instant', block: 'start' });
         }
         setIsAnimating(false);
-      }, 1000);
+      }, 100);
       
       return;
     }
@@ -252,8 +255,8 @@ const LandingSidebar = () => {
 
   return (
     <aside 
+      ref={sidebarRef}
       className={`landing-sidebar ${sidebarVisible ? "visible" : ""} ${isAnimating ? "animating" : ""} ${isExpanded ? "expanded" : ""}`}
-      style={!isExpanded ? { top: `calc(50% - ${heroOffset}px)` } : undefined}
     >
       {/* Circle SVG - always visible */}
       <svg 
@@ -359,8 +362,8 @@ const LandingSidebar = () => {
               }}
               transition={{
                 type: "tween",
-                duration: 0.15,
-                ease: "easeOut",
+                duration: 0.005,
+                ease: [0.22, 1, 0.36, 1],
               }}
             >
               <div className="icon-wrapper">

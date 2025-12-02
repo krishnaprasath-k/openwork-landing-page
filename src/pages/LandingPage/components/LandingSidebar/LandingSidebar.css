@@ -12,11 +12,16 @@
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out;
+  /* No transform transition in normal state - allows instant scroll tracking */
+  transition: 
+    opacity 0.3s ease-out,
+    mask-image 0.4s ease-out,
+    -webkit-mask-image 0.4s ease-out;
   overflow: visible;
   /* No mask in normal state - full circle visible */
   mask-image: none;
   -webkit-mask-image: none;
+  will-change: transform;
 }
 
 /* Expanded state - circle scales up to 2.5x (600 * 2.5 = 1500px), right side masked */
@@ -24,6 +29,12 @@
   transform: translate(-50%, -50%) scale(2.5);
   mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0) 100%);
   -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0) 100%);
+  /* Only transition transform when expanding */
+  transition: 
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease-out,
+    mask-image 0.4s ease-out,
+    -webkit-mask-image 0.4s ease-out;
 }
 
 .landing-sidebar.visible {
@@ -108,7 +119,7 @@
               border-color 0.3s ease,
               box-shadow 0.3s ease,
               background 0.3s ease,
-              transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+              transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
   overflow: hidden;
   white-space: nowrap;
