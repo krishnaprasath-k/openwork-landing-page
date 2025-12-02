@@ -1,20 +1,29 @@
-/* Landing Sidebar */
+/* Landing Sidebar - Always a circle */
 .landing-sidebar {
   position: fixed;
-  left: 40px;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
-  width: 130px;
-  height: 100vh;
-  max-height: none;
+  transform: translate(-50%, -50%) scale(1);
+  width: 600px;
+  height: 600px;
   z-index: 900;
   display: flex;
   flex-direction: column;
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.8s ease-in-out;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out;
   overflow: visible;
+  /* No mask in normal state - full circle visible */
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+/* Expanded state - circle scales up to 2.5x (600 * 2.5 = 1500px), right side masked */
+.landing-sidebar.expanded {
+  transform: translate(-50%, -50%) scale(2.5);
+  mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0) 100%);
 }
 
 .landing-sidebar.visible {
@@ -22,52 +31,50 @@
   pointer-events: auto;
 }
 
-/* During hero transition - sidebar appears quickly with circle */
-body.hero-transitioning .landing-sidebar.visible {
-  opacity: 1;
-  pointer-events: none;
-  z-index: 1100;
-  animation: sidebarAppearWithPage 0.35s ease-out forwards;
-}
 
-@keyframes sidebarAppearWithPage {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.5) translate(20%, -15%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1) translate(0%, 0%);
-  }
-}
 
-/* Curved line SVG */
-.sidebar-line {
+/* Circle SVG - shown in hero section */
+.sidebar-circle {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  overflow: visible;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
 }
 
-/* Radiant glow traveling effect */
-.radiant-glow-line {
-  stroke-dasharray: 600 1800;
-  stroke-dashoffset: 1200;
-  animation: radiantTravel 10s linear infinite;
+.sidebar-circle.visible {
   opacity: 1;
 }
 
-@keyframes radiantTravel {
+/* Base circle - subtle static ring */
+.circle-base {
+  opacity: 0.8;
+}
+
+/* Circle glow traveling effect - matches sidebar curve glow style */
+/* Circle circumference = 2 * π * 270 ≈ 1696px */
+.circle-glow-arc {
+  stroke-dasharray: 400 1296;
+  stroke-dashoffset: 0;
+  animation: circleGlowTravel 8s linear infinite;
+}
+
+/* Clockwise traveling glow around the circle */
+@keyframes circleGlowTravel {
   0% {
-    stroke-dashoffset: 1200;
+    stroke-dashoffset: 0;
   }
   100% {
-    stroke-dashoffset: -4050;
+    stroke-dashoffset: -1696;
   }
 }
+
+
+
+
 
 
 /* Navigation icons container */
@@ -100,11 +107,18 @@ body.hero-transitioning .landing-sidebar.visible {
               padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.3s ease,
               box-shadow 0.3s ease,
-              background 0.3s ease;
+              background 0.3s ease,
+              transform 1s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
   overflow: hidden;
   white-space: nowrap;
-  transform-origin: left center;
+  transform-origin: center center;
+  transform: scale(1);
+}
+
+/* Counter-scale icons when circle is expanded (circle scales 2.5x, icons scale 1/2.5 = 0.4) */
+.landing-sidebar.expanded .sidebar-nav-item {
+  transform: scale(0.4);
 }
 
 .sidebar-nav-item .icon-wrapper {

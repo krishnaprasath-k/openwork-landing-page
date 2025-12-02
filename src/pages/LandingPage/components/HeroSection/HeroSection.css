@@ -15,419 +15,31 @@
   max-width: 1280px;
   height: 100vh;
   padding-top: 64px;
-  padding-bottom: 40px;
+  padding-bottom: 0;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: visible;
-}
-
-/* ========================================
-   CIRCLE PORTAL MASK - Reveals new page inside circle
-   The circle acts as a window/portal to the new page
-   White overlay with circular hole that expands - CENTERED
-   ======================================== */
-.circle-portal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 900;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.circle-portal-mask {
-  display: none;
-}
-
-/* Use mask-image for the portal effect - CENTERED at 50% 50% */
-.circle-portal-overlay::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #FFFFFF;
-  animation: portalReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes portalReveal {
-  0% {
-    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 280px, black 281px);
-    mask: radial-gradient(circle at 50% 50%, transparent 280px, black 281px);
-  }
-  100% {
-    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 2500px, black 2501px);
-    mask: radial-gradient(circle at 50% 50%, transparent 2500px, black 2501px);
-  }
-}
-
-/* ========================================
-   SVG MORPHING PATH - Circle to Sidebar
-   ======================================== */
-.hero-morph-path-svg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 1000;
-  opacity: 0;
-  display: none; /* Hide the blue morphing path */
-}
-
-.hero-morph-path-svg.animating {
-  opacity: 0;
-  display: none;
-}
-
-.morph-path {
-  stroke-dasharray: 1200;
-  stroke-dashoffset: 1200;
-  opacity: 0;
-  display: none;
-}
-
-/* Path morph animation - draws and transforms from circle arc to sidebar curve */
-.hero-morph-path-svg.animating .morph-path {
-  animation: pathDraw 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-}
-
-@keyframes pathDraw {
-  0% {
-    stroke-dashoffset: 1200;
-    opacity: 0;
-    d: path("M 600 100 Q 750 400, 600 700");
-  }
-  8% {
-    opacity: 0.9;
-    d: path("M 580 100 Q 730 400, 580 700");
-  }
-  18% {
-    opacity: 1;
-    d: path("M 550 100 Q 700 400, 550 700");
-  }
-  30% {
-    d: path("M 480 100 Q 620 400, 480 700");
-  }
-  45% {
-    d: path("M 380 95 Q 500 400, 380 705");
-  }
-  60% {
-    d: path("M 280 90 Q 350 400, 280 710");
-  }
-  75% {
-    d: path("M 180 85 Q 140 400, 180 715");
-    opacity: 0.9;
-  }
-  88% {
-    d: path("M 120 70 Q 70 400, 120 730");
-    opacity: 0.5;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-    d: path("M 95 50 Q 40 400, 95 750");
-  }
-}
-
-/* Hero Design Container - holds circle, glow, and icons */
-.hero-design-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(590px, 90vh);
-  height: min(590px, 90vh);
-  transform-origin: center center;
-  will-change: transform, opacity;
-}
-
-/* ========================================
-   CIRCLE ANIMATION - Stays visible as portal edge
-   The circle outline marks the edge of the portal - CENTERED
-   ======================================== */
-.hero-design-container.expanding {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  pointer-events: none;
-  z-index: 1000;
-  animation: circleExpandAsPortal 0.5s ease-out forwards;
-}
-
-.hero-design-container.expanding .hero-circle-image {
-  animation: circleImageExpand 0.5s ease-out forwards;
-}
-
-.hero-design-container.expanding .hero-glow-image {
-  animation: glowExpandWithPortal 0.5s ease-out forwards;
-}
-
-/* Circle expands smoothly and fades out */
-@keyframes circleExpandAsPortal {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(2.8);
-    opacity: 0;
-  }
-}
-
-/* Circle image fades out */
-@keyframes circleImageExpand {
-  0% {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(0deg) scale(1);
-  }
-}
-
-/* Glow fades with circle */
-@keyframes glowExpandWithPortal {
-  0% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* ========================================
-   ICON ANIMATIONS - UNIFORM FADE OUT
-   All icons fade out uniformly for consistent experience
-   ======================================== */
-
-/* Base traveling icon style */
-.hero-icon-btn.icon-traveling {
-  position: fixed;
-  z-index: 1001;
-  animation: iconUniformFade 0.6s ease-out forwards;
-  will-change: transform, opacity;
-}
-
-/* All icons use same fade animation */
-.hero-icon-btn.icon-travel-home,
-.hero-icon-btn.icon-travel-post,
-.hero-icon-btn.icon-travel-direct,
-.hero-icon-btn.icon-travel-search,
-.hero-icon-btn.icon-travel-dao,
-.hero-icon-btn.icon-travel-progress,
-.hero-icon-btn.icon-travel-disputes {
-  animation-name: iconUniformFade;
-}
-
-@keyframes iconUniformFade {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-}
-
-/* Non-clicked icons fade out smoothly */
-.hero-icon-btn.icon-fading {
-  position: fixed;
-  z-index: 1001;
-  animation: iconFadeOut 0.8s linear forwards;
-}
-
-@keyframes iconFadeOut {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateZ(0);
-  }
-  30% {
-    opacity: 0.65;
-    transform: scale(0.97) translateZ(0);
-  }
-  60% {
-    opacity: 0.3;
-    transform: scale(0.94) translateZ(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.9) translateZ(0);
-  }
-}
-
-/* Content fades out smoothly */
-.hero-center-content.fading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 999;
-  animation: contentFadeOut 1s linear forwards;
-}
-
-@keyframes contentFadeOut {
-  0% {
-    opacity: 1;
-    transform: translateY(0) translateZ(0);
-  }
-  40% {
-    opacity: 0.6;
-    transform: translateY(-4px) translateZ(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-12px) translateZ(0);
-  }
-}
-
-/* Glow image - positioned to extend beyond the circle */
-.hero-glow-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120%;
-  height: 120%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Circle SVG image - rotating animation */
-.hero-circle-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  animation: rotate-circle 5s linear infinite;
-}
-
-@keyframes rotate-circle {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Icon Button Base Style */
-.hero-icon-btn {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  pointer-events: all;
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.hero-icon-btn:hover {
-  box-shadow: 0px 4px 12px rgba(18, 70, 255, 0.2);
-}
-
-.hero-icon-btn img {
-  width: 10.667px;
-  height: 10.667px;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-  filter: brightness(0.3);
-}
-
-.hero-icon-btn:hover img {
-  opacity: 1;
-  filter: brightness(0.1);
-}
-
-/* Icon Positions - Based on Figma coordinates relative to circle */
-/* Circle is 643px, icons positioned ON the circle edge at specific angles */
-
-/* Home - Top Center at 90° (12 o'clock) */
-.hero-icon-home {
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -50%);
-}
-
-/* Direct Contract - Top Left at approximately 130° on circle */
-.hero-icon-direct {
-  left: 12.5%;
-  top: 16%;
-  transform: translate(-50%, -50%);
-}
-
-/* DAO - Top Right at approximately 50° on circle */
-.hero-icon-dao {
-  right: 12.5%;
-  top: 16%;
-  transform: translate(50%, -50%);
-}
-
-/* Post Job - Left center at 180° (9 o'clock) */
-.hero-icon-post {
-  left: 0;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Browse Jobs (Search) - Right center at 0° (3 o'clock) */
-.hero-icon-search {
-  right: 0;
-  top: 50%;
-  transform: translate(50%, -50%);
-}
-
-/* Job Progress - Bottom Left at approximately 220° */
-.hero-icon-progress {
-  left: 12.5%;
-  bottom: 16%;
-  transform: translate(-50%, 50%);
-}
-
-/* Disputes - Bottom Right at approximately 320° */
-.hero-icon-disputes {
-  right: 12.5%;
-  bottom: 16%;
-  transform: translate(50%, 50%);
+  box-sizing: border-box;
 }
 
 /* Center Content */
 .hero-center-content {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   max-width: 481px;
   gap: 48px;
   padding: 0 20px;
-  transition: opacity 0.3s ease-out;
-}
-
-.hero-center-content.fading {
-  animation: contentFadeOut 0.3s ease-out forwards;
 }
 
 .hero-text-content {
@@ -485,26 +97,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1440px) {
-  .hero-design-container {
-    width: min(540px, 68vh);
-    height: min(540px, 68vh);
-  }
-}
-
-@media (max-width: 1280px) {
-  .hero-design-container {
-    width: min(500px, 65vh);
-    height: min(500px, 65vh);
-  }
-}
-
 @media (max-width: 1024px) {
-  .hero-design-container {
-    width: min(450px, 60vh);
-    height: min(450px, 60vh);
-  }
-
   .hero-center-content {
     gap: 40px;
   }
@@ -526,26 +119,6 @@
     padding-top: 80px;
   }
 
-  .hero-design-container {
-    width: 380px;
-    height: 380px;
-  }
-
-  .hero-glow-image {
-    width: 480px;
-    height: 480px;
-  }
-
-  .hero-icon-btn {
-    width: 28px;
-    height: 28px;
-  }
-
-  .hero-icon-btn img {
-    width: 9px;
-    height: 9px;
-  }
-
   .hero-center-content {
     max-width: 90%;
     gap: 36px;
@@ -564,26 +137,6 @@
 }
 
 @media (max-width: 480px) {
-  .hero-design-container {
-    width: 300px;
-    height: 300px;
-  }
-
-  .hero-glow-image {
-    width: 380px;
-    height: 380px;
-  }
-
-  .hero-icon-btn {
-    width: 24px;
-    height: 24px;
-  }
-
-  .hero-icon-btn img {
-    width: 8px;
-    height: 8px;
-  }
-
   .hero-center-content {
     gap: 32px;
   }

@@ -3,114 +3,142 @@ import { motion } from "framer-motion";
 import "./LandingSidebar.css";
 
 const LandingSidebar = () => {
-  const [activeSection, setActiveSection] = useState("lp-4-section");
-  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState("lp-1-section");
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
-  const pathRef = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false); // Circle expanded state (after first click)
+  const [heroOffset, setHeroOffset] = useState(0); // Track scroll offset for circle positioning
+  const circleRef = useRef(null);
 
   const sidebarItems = [
-    { id: 1, icon: "/assets/sidebar-icon-1.svg", label: "Home", section: "lp-2-section" },
-    { id: 2, icon: "/assets/sidebar-icon-2.svg", label: "Post Job", section: "lp-4-section" },
-    { id: 3, icon: "/assets/sidebar-icon-3.svg", label: "Direct Contract", section: "lp-5-section" },
-    { id: 4, icon: "/assets/search-icon.svg", label: "Browse Jobs", section: "lp-6-section" },
-    { id: 5, icon: "/assets/sidebar-icon-7.svg", label: "DAO", section: "lp-7-section", isDao: true },
-    { id: 6, icon: "/assets/sidebar-icon-4.svg", label: "Job Progress", section: "lp-8-section" },
-    { id: 7, icon: "/assets/sidebar-icon-5.svg", label: "Disputes", section: "lp-9-section" },
+    { id: 1, icon: "/assets/sidebar-icon-1.svg", label: "Home", section: "lp-1-section", angle: 270 },           // Top (12 o'clock)
+    { id: 2, icon: "/assets/sidebar-icon-2.svg", label: "Post Job", section: "lp-4-section", angle: 219 },       // Anti-clockwise
+    { id: 3, icon: "/assets/sidebar-icon-3.svg", label: "Direct Contract", section: "lp-5-section", angle: 168 }, 
+    { id: 4, icon: "/assets/search-icon.svg", label: "Browse Jobs", section: "lp-6-section", angle: 117 },    
+    { id: 5, icon: "/assets/sidebar-icon-7.svg", label: "DAO", section: "lp-7-section", isDao: true, angle: 66 }, 
+    { id: 6, icon: "/assets/sidebar-icon-4.svg", label: "Job Progress", section: "lp-8-section", angle: 15 }, 
+    { id: 7, icon: "/assets/sidebar-icon-5.svg", label: "Disputes", section: "lp-9-section", angle: 324 },       // Just before top
   ];
 
   // Get the index of the currently active section
   const activeIndex = sidebarItems.findIndex(item => item.section === activeSection);
 
   /** ---------------------------------------------------------
-   *  GET POINT ON CURVE - Calculate position along the SVG path
-   *  percent: 0 to 1, where 0.5 is the center (deepest part of curve)
+   *  GET POINT ON CIRCLE - For hero section display
    * ---------------------------------------------------------*/
-  const getPointOnCurve = (percent) => {
-    // Clamp percent between 0 and 1
-    const clampedPercent = Math.max(0, Math.min(1, percent));
-    
-    // Always use the path element for accurate positioning
-    if (pathRef.current) {
-      const path = pathRef.current;
-      const totalLength = path.getTotalLength();
-      const point = path.getPointAtLength(totalLength * clampedPercent);
-      
-      // Scale from SVG coordinates (viewBox 0 0 120 800) to actual element size
-      const svg = path.ownerSVGElement;
-      const svgRect = svg.getBoundingClientRect();
-      const scaleX = svgRect.width / 120;
-      const scaleY = svgRect.height / 800;
-      
-      return { 
-        x: point.x * scaleX, 
-        y: point.y * scaleY 
-      };
-    }
-    
-    // Fallback: calculate quadratic bezier curve mathematically
-    // Matches: M 95 0 Q 20 400, 95 850
-    const startX = 95, startY = 0;
-    const controlX = 20, controlY = 400;
-    const endX = 95, endY = 850;
-    
-    const t = clampedPercent;
-    const mt = 1 - t;
-    
-    // Quadratic bezier formula: B(t) = (1-t)²P0 + 2(1-t)tP1 + t²P2
-    const x = mt * mt * startX + 2 * mt * t * controlX + t * t * endX;
-    const y = mt * mt * startY + 2 * mt * t * controlY + t * t * endY;
-    
-    return { x, y };
+  const getPointOnCircle = (angle, radius = 270) => {
+    const radians = (angle * Math.PI) / 180;
+    return {
+      x: Math.cos(radians) * radius,
+      y: Math.sin(radians) * radius
+    };
   };
 
   /** ---------------------------------------------------------
-   *  CALCULATE ICON POSITION BASED ON ACTIVE SECTION
-   *  Icons cluster around the center, with active at 0.5
-   *  Active icon has extra gap from neighbors
+   *  GET ICON POSITION - Always on circle, expand with circle
    * ---------------------------------------------------------*/
   const getIconPosition = (itemIndex) => {
-    const baseSpacing = 0.09; // Normal spacing between icons
-    const activeGap = 0.05; // Extra gap around the active icon
-    
-    // Calculate offset from active icon
-    const offsetFromActive = itemIndex - activeIndex;
-    
-    // Active icon is at center (0.5)
-    const centerPercent = 0.5;
-    
-    let percent = centerPercent;
-    
-    if (offsetFromActive !== 0) {
-      // Add extra gap for icons adjacent to active
-      const direction = offsetFromActive > 0 ? 1 : -1;
-      const absOffset = Math.abs(offsetFromActive);
+    if (isExpanded) {
+      // When expanded, icons cluster around the active section
+      // Active icon is at center (180°), others spread around it
+      // On left arc of circle: 
+      //   - angle 90° = top of left side
+      //   - angle 180° = middle left
+      //   - angle 270° = bottom of left side
+      // So: to go UP, we need SMALLER angles (towards 90°)
+      //     to go DOWN, we need LARGER angles (towards 270°)
+      // Icons BEFORE active (smaller index like Home) should be UP (smaller angle)
+      // Icons AFTER active (larger index like Disputes) should be DOWN (larger angle)
+      const centerAngle = 180; // Directly left (center of left arc)
+      const spacing = 13; // Degrees between icons
+      const activeGap = 5; // Extra gap around active icon
       
-      // First icon after active gets extra gap, rest have normal spacing
-      percent = centerPercent + (direction * activeGap) + (offsetFromActive * baseSpacing);
+      // Calculate offset from active icon
+      const offsetFromActive = itemIndex - activeIndex;
+      // offsetFromActive < 0 means icon is BEFORE active (Home, etc) → go UP → SUBTRACT angle
+      // offsetFromActive > 0 means icon is AFTER active (Disputes, etc) → go DOWN → ADD angle
+      
+      let angle = centerAngle;
+      if (offsetFromActive !== 0) {
+        // NEGATE the offset to flip direction:
+        // - Before active (negative offset) → positive angle change → goes DOWN? No wait...
+        // Actually: angle 90 is TOP, 270 is BOTTOM on left side
+        // So smaller angle = UP, larger angle = DOWN
+        // offsetFromActive = -1 (Home before Post Job) should make angle SMALLER (go up)
+        // offsetFromActive = +1 (Direct Contract after Post Job) should make angle LARGER (go down)
+        // Current: angle = 180 + offset*spacing = 180 + (-1)*13 = 167 (smaller = UP) ✓
+        // But it's showing reversed, so the circle coordinate system must be flipped
+        // Let's NEGATE to flip:
+        const flippedOffset = -offsetFromActive;
+        const gapDirection = flippedOffset > 0 ? 1 : -1;
+        angle = centerAngle + (gapDirection * activeGap) + (flippedOffset * spacing);
+      }
+      
+      // Use same radius - CSS scale handles the size change
+      return getPointOnCircle(angle, 270);
     }
-    
-    return getPointOnCurve(percent);
+    // In normal circle mode, use predefined angles
+    return getPointOnCircle(sidebarItems[itemIndex].angle, 270);
   };
 
   /** ---------------------------------------------------------
    *  SCROLL SECTION TRACKING
    * ---------------------------------------------------------*/
   useEffect(() => {
+    let transitionTimeout = null;
+    
     const handleScroll = () => {
-      // Don't update active section during click animation
       if (isAnimating) return;
       
-      const scrollMid = window.scrollY + window.innerHeight / 2;
-      const profile = document.getElementById("lp-2-section");
+      const scrollY = window.scrollY;
+      const scrollMid = scrollY + window.innerHeight / 2;
+      const heroSection = document.getElementById("lp-1-section");
       const disputeSection = document.getElementById("lp-9-section");
 
-      if (profile && disputeSection) {
-        // Show sidebar after profile section, hide after disputes section
-        const showStart = profile.offsetTop - 200;
-        const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
-        setSidebarVisible(window.scrollY >= showStart && scrollMid < hideAfter);
-      } else if (profile) {
-        setSidebarVisible(window.scrollY >= profile.offsetTop - 200);
+      // When at hero - show circle (not expanded)
+      // When past hero - show expanded sidebar
+      if (heroSection) {
+        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+        const shouldBeExpanded = scrollY >= heroBottom - 200;
+        
+        // Track scroll offset for circle positioning (scrolls with hero)
+        if (!shouldBeExpanded) {
+          setHeroOffset(scrollY);
+        }
+        
+        // If mode is changing, hide first then switch
+        if (shouldBeExpanded !== isExpanded) {
+          setSidebarVisible(false);
+          clearTimeout(transitionTimeout);
+          transitionTimeout = setTimeout(() => {
+            setIsExpanded(shouldBeExpanded);
+            // Show after mode switch
+            setTimeout(() => {
+              if (shouldBeExpanded) {
+                if (disputeSection) {
+                  const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
+                  setSidebarVisible(scrollMid < hideAfter);
+                } else {
+                  setSidebarVisible(true);
+                }
+              } else {
+                setSidebarVisible(true);
+              }
+            }, 50);
+          }, 200);
+        } else {
+          // Same mode, just update visibility
+          if (shouldBeExpanded) {
+            if (disputeSection) {
+              const hideAfter = disputeSection.offsetTop + disputeSection.offsetHeight;
+              setSidebarVisible(scrollMid < hideAfter);
+            } else {
+              setSidebarVisible(true);
+            }
+          } else {
+            setSidebarVisible(true);
+          }
+        }
       }
 
       for (let i = sidebarItems.length - 1; i >= 0; i--) {
@@ -124,31 +152,65 @@ const LandingSidebar = () => {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [sidebarItems, isAnimating]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(transitionTimeout);
+    };
+  }, [sidebarItems, isAnimating, isExpanded]);
 
   const scrollTo = (id) => {
-    if (isAnimating) return; // Prevent multiple clicks during animation
+    if (isAnimating) return;
     
     const currentEl = document.getElementById(activeSection);
     const targetEl = document.getElementById(id);
     
-    if (!targetEl || id === activeSection) return;
+    if (!targetEl) return;
+    if (isExpanded && id === activeSection) return;
     
-    // Determine direction: forward (next) or backward (previous)
     const currentIndex = sidebarItems.findIndex(item => item.section === activeSection);
     const targetIndex = sidebarItems.findIndex(item => item.section === id);
     const isForward = targetIndex > currentIndex;
+    const isGoingHome = id === "lp-1-section";
     
     setIsAnimating(true);
-    
-    // Set active section IMMEDIATELY on click to prevent icon jumping
     setActiveSection(id);
     
-    // Prevent scroll jank during animation
+    // If not expanded, trigger expansion animation first
+    if (!isExpanded) {
+      setIsExpanded(true);
+      
+      // After expansion animation, scroll to target with page transition
+      setTimeout(() => {
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'instant', block: 'start' });
+        }
+        setIsAnimating(false);
+      }, 1000);
+      
+      return;
+    }
+    
+    // If going to Home, contract the circle smoothly
+    if (isGoingHome) {
+      // Hide sidebar first, then scroll
+      setSidebarVisible(false);
+      
+      // Scroll to home instantly
+      targetEl.scrollIntoView({ behavior: "instant", block: "start" });
+      
+      // After scroll, contract the circle and show it
+      setTimeout(() => {
+        setIsExpanded(false);
+        setSidebarVisible(true);
+        setIsAnimating(false);
+      }, 100);
+      
+      return;
+    }
+    
+    // Already expanded - apply page transition animations
     document.body.style.overflow = 'hidden';
     
-    // Find the closest lp-section parent for both elements
     const getSection = (el) => {
       let parent = el;
       while (parent && !parent.classList.contains('lp-section')) {
@@ -168,7 +230,6 @@ const LandingSidebar = () => {
       if (currentSection) {
         currentSection.classList.add(isForward ? 'page-exit' : 'page-exit-reverse');
       }
-      
       if (targetSection) {
         targetSection.classList.add(isForward ? 'page-enter' : 'page-enter-reverse');
       }
@@ -187,28 +248,39 @@ const LandingSidebar = () => {
     }, 600);
   };
 
-  // Force re-render when path is ready
-  const [pathReady, setPathReady] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setPathReady(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+
 
   return (
-    <aside className={`landing-sidebar ${sidebarVisible ? "visible" : ""} ${isAnimating ? "animating" : ""}`}>
-      
-      {/* SVG Curve Line - Smooth arc from top-right to bottom-right */}
-      <svg className="sidebar-line" viewBox="0 0 120 800" preserveAspectRatio="none">
-        {/* Define radiant glow gradient */}
+    <aside 
+      className={`landing-sidebar ${sidebarVisible ? "visible" : ""} ${isAnimating ? "animating" : ""} ${isExpanded ? "expanded" : ""}`}
+      style={!isExpanded ? { top: `calc(50% - ${heroOffset}px)` } : undefined}
+    >
+      {/* Circle SVG - always visible */}
+      <svg 
+        ref={circleRef}
+        className="sidebar-circle visible" 
+        viewBox="0 0 600 600" 
+        preserveAspectRatio="xMidYMid meet"
+      >
         <defs>
-          <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          {/* Base circle gradient - very subtle light gray/blue like in Figma */}
+          <linearGradient id="circleBaseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#a8c0ff" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#c0d0ff" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#a8c0ff" stopOpacity="0.4" />
+          </linearGradient>
+          
+          {/* Glow gradient for traveling arc - matches sidebar curve */}
+          <linearGradient id="circleGlowGradient" gradientUnits="userSpaceOnUse" x1="300" y1="30" x2="300" y2="570">
             <stop offset="0%" stopColor="#4D7FFF" stopOpacity="0" />
             <stop offset="40%" stopColor="#4D7FFF" stopOpacity="0.8" />
             <stop offset="50%" stopColor="#1246FF" stopOpacity="1" />
             <stop offset="60%" stopColor="#4D7FFF" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#4D7FFF" stopOpacity="0" />
           </linearGradient>
-          <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+          
+          {/* Glow filter for the arc */}
+          <filter id="glowFilter" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="6" result="blur"/>
             <feMerge>
               <feMergeNode in="blur"/>
@@ -217,29 +289,33 @@ const LandingSidebar = () => {
             </feMerge>
           </filter>
         </defs>
-
-        {/* Base curve line - invisible but needed for path calculations */}
-        <path
-          ref={pathRef}
-          id="curvePath"
-          d="M 95 0 Q 20 400, 95 850"
-          stroke="transparent"
-          strokeWidth="1.5"
+        
+        {/* Base circle - subtle static stroke */}
+        <circle 
+          cx="300" 
+          cy="300" 
+          r="270" 
+          stroke="url(#circleBaseGradient)" 
+          strokeWidth="1.5" 
           fill="none"
-          strokeLinecap="butt"
+          className="circle-base"
         />
         
-        {/* Radiant glow traveling effect */}
-        <path
-          d="M 95 0 Q 20 400, 95 850"
-          stroke="url(#glowGradient)"
-          strokeWidth="3"
+        {/* Traveling glow arc - matches sidebar curve glow style */}
+        <circle 
+          cx="300" 
+          cy="300" 
+          r="270" 
+          stroke="url(#circleGlowGradient)" 
+          strokeWidth="3" 
           fill="none"
-          strokeLinecap="butt"
-          className="radiant-glow-line"
-          filter="url(#softGlow)"
+          strokeLinecap="round"
+          className="circle-glow-arc"
+          filter="url(#glowFilter)"
         />
       </svg>
+
+
 
       {/* Navigation Icons */}
       <nav className="sidebar-nav">
@@ -247,16 +323,19 @@ const LandingSidebar = () => {
           const position = getIconPosition(index);
           const isActive = activeSection === item.section;
           
-          // Calculate visibility - hide icons that are too far from active
-          const distanceFromActive = Math.abs(index - activeIndex);
-          const isVisible = distanceFromActive <= 4;
-          const opacity = isVisible ? Math.max(0.5, 1 - distanceFromActive * 0.12) : 0;
-
-          // Icon size (matches CSS)
           const iconSize = 36;
-          // Center all icons on the curve - use half icon size for both x and y
           const xOffset = iconSize / 2;
           const yOffset = iconSize / 2;
+
+          // Circle center is always 300,300 (CSS scale handles size change)
+          const circleCenter = { x: 300, y: 300 };
+          
+          // Counter-scale icons when expanded (container scales 2.5x, so icons need 1/2.5 = 0.4)
+          const iconScale = isExpanded ? 0.4 : 1;
+          
+          // Calculate final position
+          const finalX = circleCenter.x + position.x - xOffset;
+          const finalY = circleCenter.y + position.y - yOffset;
 
           return (
             <motion.button
@@ -266,17 +345,22 @@ const LandingSidebar = () => {
               style={{
                 transformOrigin: `${iconSize / 2}px ${iconSize / 2}px`
               }}
+              initial={{
+                x: finalX,
+                y: finalY,
+                opacity: 1,
+                scale: iconScale,
+              }}
               animate={{
-                x: position.x - xOffset,
-                y: position.y - yOffset,
-                opacity: opacity,
-                scale: isActive ? 1 : 1,
+                x: finalX,
+                y: finalY,
+                opacity: 1,
+                scale: iconScale,
               }}
               transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 25,
-                mass: 0.8,
+                type: "tween",
+                duration: 0.15,
+                ease: "easeOut",
               }}
             >
               <div className="icon-wrapper">
